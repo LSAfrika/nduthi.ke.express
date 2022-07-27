@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
 module.exports = mongoose.model(
-  "safaricomrfefrencenumber",
+  "Accountnumbermodel",
   new mongoose.Schema({ accountref: { type: String, required: true } })
 );

@@ -1,0 +1,290 @@
+PATCH  http://localhost:5050/nduthi-co-ke/us-central1/apiv2/updatead/3timrfzSICOFIaIH7gub HTTP/1.1
+Content-Type: application/json
+
+{
+    "enginecc": 350,
+    "created": 1651168769686,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "price": 70000,
+    "name": "tnt 250",
+    "brand": "keeway",
+    "id": "3timrfzSICOFIaIH7gub",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/3timrfzSICOFIaIH7gub/16511688108251651168810695Jellyfish.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/3timrfzSICOFIaIH7gub/16511688108271651168810695Lighthouse.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/3timrfzSICOFIaIH7gub/16511688108291651168810695Penguins.jpg"
+    ],
+    "counter": 1
+  }
+
+###
+POST http://localhost:5050/nduthi-co-ke/us-central1/apiv2/firestore HTTP/1.1
+Content-Type: application/json
+
+[
+  {
+    "enginecc": 250,
+    "created": 1651168873323,
+    "counter": 0,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "county":"Mombasa",
+    "subcounty":"Likoni",
+    "mpesaid":"mpesaid"
+    "price": 60000,
+    "name": "tnt 250",
+    "brand": "tvs",
+    "id": "FlkHbENYZtEErdfgOk0a",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/FlkHbENYZtEErdfgOk0a/16511689056601651168905566Tulips.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/FlkHbENYZtEErdfgOk0a/16511689056611651168905566Penguins.jpg"
+    ]
+  },
+  {
+    "enginecc": 250,
+    "created": 1651168454568,
+    "counter": 0,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "county":"Lamu",
+    "subcounty":"Lamu East",
+    "price": 60000,
+    "name": "tnt 25",
+    "brand": "beneli",
+    "id": "GYPp3t07JiNgeej4SfQ4",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/GYPp3t07JiNgeej4SfQ4/16511684755541651168475385Lighthouse.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/GYPp3t07JiNgeej4SfQ4/16511684755561651168475385Penguins.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/GYPp3t07JiNgeej4SfQ4/16511684755591651168475385Koala.jpg"
+    ]
+  },
+  {
+    "enginecc": 250,
+    "created": 1651168625324,
+    "counter": 0,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "price": 60000,
+    "county":"Mombasa",
+    "subcounty":"Nyali",
+    "name": "tnt 250",
+    "brand": "honda",
+    "id": "Hk8pzfsuuTSDUQDX5A1x",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/Hk8pzfsuuTSDUQDX5A1x/16511686558891651168655805Lighthouse.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/Hk8pzfsuuTSDUQDX5A1x/16511686558911651168655805Desert.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/Hk8pzfsuuTSDUQDX5A1x/16511686558931651168655805Penguins.jpg"
+    ]
+  },
+  {
+    "enginecc": 250,
+    "created": 1651168511055,
+    "counter": 0,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "price": 60000,
+    "county":"Meru",
+    "subcounty":"Buuri",
+    "name": "tnt 250",
+    "brand": "captain",
+    "id": "ROirM4TQjJ2ItX6sEwDS",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/ROirM4TQjJ2ItX6sEwDS/16511685299191651168529831Koala.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/ROirM4TQjJ2ItX6sEwDS/16511685299221651168529831Penguins.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/ROirM4TQjJ2ItX6sEwDS/16511685299231651168529831Tulips.jpg"
+    ]
+  },
+  {
+    "enginecc": 250,
+    "created": 1651168912522,
+    "counter": 0,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "price": 60000,
+    "county":"Nakuru",
+    "subcounty":"Gilgil",
+    "name": "tnt 250",
+    "brand": "keeway",
+    "id": "UCUAtmW8r5Dv1l15byFO",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/UCUAtmW8r5Dv1l15byFO/16511689260251651168925934Lighthouse.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/UCUAtmW8r5Dv1l15byFO/16511689260261651168925934Koala.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/UCUAtmW8r5Dv1l15byFO/16511689260291651168925934Penguins.jpg"
+    ]
+  },
+  {
+    "enginecc": 250,
+    "created": 1651168712269,
+    "counter": 0,
+    "negotiable": "fixed",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "price": 60000,
+    "county":"Nakuru",
+    "subcounty":"Naivasha",
+    "name": "tnt 250",
+    "brand": "haojue",
+    "id": "VQ8jH1q2lYvwYvnunfW3",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/VQ8jH1q2lYvwYvnunfW3/16511687624201651168762322Chrysanthemum.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/VQ8jH1q2lYvwYvnunfW3/16511687624221651168762324Lighthouse.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/VQ8jH1q2lYvwYvnunfW3/16511687624241651168762323Desert.jpg"
+    ]
+  }, 
+  {
+    "enginecc": 250,
+    "created": 1651168593186,
+    "counter": 0,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "price": 60000,
+    "county":"Nairobi",
+    "subcounty":"Mathare",
+    "name": "tnt 250",
+    "brand": "ranger",
+    "id": "des1fmlM48KPdGUImL0L",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/des1fmlM48KPdGUImL0L/16511686137381651168613637Jellyfish.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/des1fmlM48KPdGUImL0L/16511686137391651168613636Koala.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/des1fmlM48KPdGUImL0L/16511686137411651168613636Tulips.jpg"
+    ]
+  },
+  {
+    "enginecc": 250,
+    "created": 1651168953913,
+    "counter": 0,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "county":"Nairobi",
+    "subcounty":"langata",
+    "price": 60000,
+    "name": "tnt 250",
+    "brand": "haojue",
+    "id": "sKPYVHJ9qYW7arLdAuA8",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/sKPYVHJ9qYW7arLdAuA8/16511689705261651168970436Koala.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/sKPYVHJ9qYW7arLdAuA8/16511689705281651168970436Jellyfish.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/sKPYVHJ9qYW7arLdAuA8/16511689705301651168970437Hydrangeas.jpg"
+    ]
+  },
+  {
+    "enginecc": 250,
+    "created": 1651300727620,
+    "counter": 0,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "price": 60000,
+    "county":"Nairobi",
+    "subcounty":"Kasarani",
+    "name": "tnt 250",
+    "brand": "suzuki",
+    "id": "NIs4qzvnkL2HCxpve7wA",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/NIs4qzvnkL2HCxpve7wA/16513007409971651300740914Tulips.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/NIs4qzvnkL2HCxpve7wA/16513007409981651300740914Chrysanthemum.jpg"
+    ]
+  },
+  {
+    "enginecc": 250,
+    "created": 1651300607623,
+    "counter": 0,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "price": 60000,
+    "county":"Nairobi",
+    "subcounty":"Kasarani",
+    "name": "cbr",
+    "brand": "honda",
+    "id": "hPlaWPMFtz3ncrLj5ELY",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/hPlaWPMFtz3ncrLj5ELY/16513006220711651300621949Desert.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/hPlaWPMFtz3ncrLj5ELY/16513006220731651300621950Hydrangeas.jpg"
+    ]
+  },
+  {
+    "enginecc": 250,
+    "created": 1651300748326,
+    "counter": 0,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "price": 60000,
+    "name": "tnt 250",
+    "brand": "tvs",
+    "county":"Nairobi",
+    "subvounty":"Kasarani",
+
+    "id": "kQeXb0KfwfhWwlHPv2oX",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/kQeXb0KfwfhWwlHPv2oX/16513007632841651300763192Chrysanthemum.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/kQeXb0KfwfhWwlHPv2oX/16513007632871651300763192Desert.jpg"
+    ]
+  },
+  {
+    "enginecc": 250,
+    "created": 1651300670884,
+    "counter": 0,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "price": 60000,
+    "county":"Nairobi",
+    "subcounty":"Makadara",
+    "name": "tnt 250",
+    "brand": "ktm",
+    "id": "l2bq46zxvZmoGKvG2IeT",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/l2bq46zxvZmoGKvG2IeT/16513006884261651300688347Koala.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/l2bq46zxvZmoGKvG2IeT/16513006884281651300688347Lighthouse.jpg"
+    ]
+  },
+  {
+    "enginecc": 250,
+    "created": 1651300649272,
+    "counter": 0,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "price": 60000,
+    "county":"Nairobi",
+    "subcounty":"Starehe",
+    "name": "tnt 250",
+    "brand": "sanya",
+    "id": "rbvgoV8lw1fC4Xtrkeoz",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/rbvgoV8lw1fC4Xtrkeoz/16513006614061651300661331Jellyfish.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/rbvgoV8lw1fC4Xtrkeoz/16513006614081651300661331Koala.jpg"
+    ]
+  },
+  {
+    "enginecc": 250,
+    "created": 1651300628776,
+    "counter": 0,
+    "negotiable": "negotiable",
+    "ownerId": "auth0|61ea751859e0a90071d8d1ad",
+    "condition": "used",
+    "price": 60000,
+    "county":"Nairobi",
+    "subcounty":"Kamukunji",
+    "name": "tnt 250",
+    "brand": "haojue",
+    "id": "zjGKzbiOEX3yJQw3bMj7",
+    "images": [
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/zjGKzbiOEX3yJQw3bMj7/16513006431001651300643020Hydrangeas.jpg",
+      "http://localhost:5050/nduthi-co-ke/us-central1/apiv2/zjGKzbiOEX3yJQw3bMj7/16513006431011651300643021Jellyfish.jpg"
+    ]
+  }
+]
+
+
