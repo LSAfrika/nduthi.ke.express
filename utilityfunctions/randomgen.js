@@ -5,13 +5,13 @@ exports.randomgenerator = async () => {
   let randomstring = "";
   const charachters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
-  console.log("random characterset length:", charachters.length);
+  // console.log("random characterset length:", charachters.length);
   for (let i = 0; i < fixed; i++) {
     randomstring += charachters.charAt(
       Math.floor(Math.random() * charachters.length)
     );
   }
-  console.log("random string: ", randomstring);
+  // console.log("random string: ", randomstring);
   const refnumber = await accountrefmodel.findOne({ accountref: randomstring });
 
   if (refnumber) {

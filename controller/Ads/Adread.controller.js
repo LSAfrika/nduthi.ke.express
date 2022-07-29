@@ -1,4 +1,5 @@
 const Admodel = require("../../models/Advert.model");
+
 exports.getad = async (req, res) => {
   try {
     id = req.params.id;
@@ -16,7 +17,10 @@ exports.getad = async (req, res) => {
 exports.getallads = async (req, res) => {
   try {
     id = req.params.id;
-    const ads = await Admodel.find();
+    const ads = await Admodel.find().populate(
+      "ownerid",
+      "username phone createdAt"
+    );
 
     if (ads) {
       res.send({ ads });

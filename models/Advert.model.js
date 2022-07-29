@@ -7,14 +7,18 @@ const Adschema = new mongoose.Schema(
     enginecc: { type: Number, required: true },
     price: { type: Number, required: true },
     negotiable: { type: String, required: true },
-    created: { type: Number, required: true, default: Date.now() },
+    created: { type: Number },
     condition: { type: String, required: true },
     county: { type: String, required: true },
     subcounty: { type: String, required: true },
     mpesaid: { type: String, required: true },
-    ownerid: { type: mongoose.Schema.Types.ObjectId, required: true },
+    ownerid: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "usermodel",
+      required: true,
+    },
     counter: { type: Number, required: true, default: 0 },
-    Images: [{ type: String, required: true }],
+    Images: [{ type: String }],
   },
   { timestamps: true }
 );
