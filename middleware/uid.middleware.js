@@ -11,7 +11,7 @@ exports.dirmiddleware = async (req, res, next) => {
       if (err) {
         console.log(err.message);
       } else {
-        path = `public/adimages/${mongooseid}`;
+        path = `adimages/${mongooseid}`;
         req.body.imgpath = path;
         // console.log(req.body);
         next();

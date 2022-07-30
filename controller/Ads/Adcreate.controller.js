@@ -34,10 +34,11 @@ exports.createad = async (req, res) => {
       // console.log("keys: ", keys);
       imgentries.forEach(async (img) => {
         let filepath = dirpath + "/" + imgobject[img].name;
+        let savepath = "public/" + filepath;
         let imagebinary = imgobject[img].data;
         // console.log(imgobject[img].data);
 
-        fs.writeFileSync(filepath, imagebinary, (err) => {
+        fs.writeFileSync(savepath, imagebinary, (err) => {
           if (err) {
             console.log("error found", err.message);
           }

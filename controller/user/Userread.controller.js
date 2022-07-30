@@ -17,3 +17,20 @@ exports.getuser = async (req, res) => {
     });
   }
 };
+exports.getusers = async (req, res) => {
+  try {
+    const Getusers = await usermodel.find();
+
+    if (Getusers) {
+      res.send({ Getusers });
+    }
+
+    //   res.send({ message: "usercreated", user: createduser });
+  } catch (error) {
+    console.log("get user error: ", error.message);
+    res.send({
+      message: "error at get user",
+      err: error.message,
+    });
+  }
+};
