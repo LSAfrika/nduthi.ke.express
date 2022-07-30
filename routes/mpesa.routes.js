@@ -6,6 +6,7 @@ const {
   stkpush,
   stkcallback,
   simulatepaybill,
+  registerurl,
   validation,
   confirmation,
 } = require("../mpesa/mpesa.payments");

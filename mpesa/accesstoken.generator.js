@@ -22,6 +22,6 @@ exports.authtoken = async (req, res, next) => {
     next();
   } catch (error) {
     console.log("error caught: ", error.message);
-    res.status(500).send({ message: "server error", err: error.message });
+    res.status(500).send({ message: "server error", err: error });
   }
 };

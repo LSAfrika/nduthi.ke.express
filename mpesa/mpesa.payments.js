@@ -33,7 +33,8 @@ exports.stkpush = async (req, res) => {
     ).toString("base64");
 
     // * safcom test line 254708374149
-
+    const stkpushurl =
+      "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
     const stkresult = await axios.post(
       stkpushurl,
       {
