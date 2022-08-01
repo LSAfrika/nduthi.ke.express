@@ -1,5 +1,6 @@
 const axios = require("axios").default;
-
+const mpesamodel = require("../models/mpesarefrence.model");
+const LNMORecipts = require("../models/LNMO.model");
 exports.getaccesstoken = async (req, res) => {
   try {
     //*     get access token using consumer key and consumer secret
@@ -12,10 +13,31 @@ exports.getaccesstoken = async (req, res) => {
 };
 
 exports.stkpush = async (req, res) => {
-  console.log("token received in stkpush: ", req.body.access_token);
+  // console.log("token received in stkpush: ", req.body.access_token);
   try {
     const auth = "Bearer " + req.body.access_token;
-    // console.log(auth);
+
+    const { mpesaid, no } = req.query;
+
+    const phonenumbersave = parseInt(no);
+
+    const boolnum = isNaN(phonenumbersave);
+    console.log(boolnum);
+    if (boolnum) {
+      return res.send("please enter valid phone number");
+    }
+    console.log(mpesaid, phonenumbersave);
+    mpesaref = await mpesamodel.findOne({ accountref: mpesaid });
+
+    console.log("ref before save: ", mpesaref.phonenumber);
+    if (mpesaref) {
+      mpesaref.phonenumber = phonenumbersave;
+      console.log(mpesaref);
+      await mpesaref.save();
+    }
+
+    // return;
+    console.log(auth);
     const timestamp = Timestamp();
 
     // *  to generate pass word we join the SHORTCODE + PASSKEY + TIMESTAMP into base 64 Buffer.from(shortcode+passkey+timestamp).toString('base64')
@@ -44,12 +66,13 @@ exports.stkpush = async (req, res) => {
         Timestamp: "20160216165627",
         TransactionType: "CustomerPayBillOnline",
         Amount: "1",
-        PartyA: "254713767648",
+        PartyA: `${phonenumbersave}`,
         PartyB: "174379",
-        PhoneNumber: "254713767648",
-        CallBackURL: "https://fa21-197-156-191-6.in.ngrok.io/callback",
-        AccountReference: "Test",
-        TransactionDesc: "Test",
+        PhoneNumber: `${phonenumbersave}`,
+        CallBackURL:
+          "https://bb1d-102-167-11-136.in.ngrok.io/payments/stkcallback",
+        AccountReference: `${mpesaid}`,
+        TransactionDesc: `payment for ${mpesaid}`,
       },
       { headers: { Authorization: auth } }
     );
@@ -64,19 +87,47 @@ exports.stkpush = async (req, res) => {
 
 exports.stkcallback = async (req, res) => {
   try {
-    console.log("....................body after paynment....................");
-    console.log(req.body);
-    console.log(
-      "....................body.body after paynment...................."
-    );
+    console.log(req.body.Body.stkCallback);
+    if (req.body.Body.stkCallback.ResultCode === 0) {
+      // console.log(
+      //   "....................path to log req.body.Body.stkCallback.CallbackMetadata ...................."
+      // );
 
-    console.log(req.body.Body);
-    console.log(
-      "....................body.body.stkcallback after paynment...................."
-    );
-    console.log(req.body.Body.stkCallback.CallbackMetadata);
+      // console.log(req.body.Body.stkCallback.CallbackMetadata);
 
-    res.send({ resp: req.body.Body.stkCallback });
+      const responsearray = req.body.Body.stkCallback.CallbackMetadata.Item;
+
+      const receiptsave = await LNMORecipts({
+        Amount: responsearray[0].Value,
+        MpesaReceiptNumber: responsearray[1].Value,
+        Balance: responsearray[2].Value,
+        TransactionDate: responsearray[3].Value,
+        PhoneNumber: responsearray[4].Value,
+      });
+
+      console.log("receipt to save: ", receiptsave);
+
+      const savedreceipt = await receiptsave.save();
+      console.log("saved receipt: ", savedreceipt);
+      const cellnumber =
+        req.body.Body.stkCallback.CallbackMetadata.Item[
+          req.body.Body.stkCallback.CallbackMetadata.Item.length - 1
+        ].Value;
+      //  console.log("phone number: ", cellnumber);
+
+      const mpesapaymentdoc = await mpesamodel.findOne({
+        phonenumber: cellnumber,
+      });
+
+      if (mpesapaymentdoc) {
+        console.log("mpesa doc: ", mpesapaymentdoc);
+      }
+      console.log("phone number after payment: ", cellnumber);
+    } else if (req.body.Body.stkCallback.ResultCode === 1032) {
+      console.log("....................error....................");
+
+      console.log(req.body.Body.stkCallback.ResultDesc);
+    }
   } catch (error) {
     console.log("stk callback error message: ", error.message);
     console.log("stk callback full error : ", error);
@@ -94,8 +145,10 @@ exports.registerurl = async (req, res) => {
       {
         ShortCode: "600610",
         ResponseType: "Completed",
-        ConfirmationURL: "https://fa21-197-156-191-6.in.ngrok.io/confirmation",
-        ValidationURL: "https://fa21-197-156-191-6.in.ngrok.io/validation",
+        ConfirmationURL:
+          "https://bb1d-102-167-11-136.in.ngrok.io/payments/confirmation",
+        ValidationURL:
+          "https://bb1d-102-167-11-136.in.ngrok.io/payments/validation",
       },
       {
         headers: { Authorization: auth },
@@ -149,6 +202,27 @@ exports.confirmation = async (req, res) => {
     console.log("confirmation: ", req.body);
     res.status(200).send({ message: "confirmation url registered" });
   } catch (error) {}
+};
+
+exports.callback = async (req, res) => {
+  try {
+    console.log("....................body after paynment....................");
+    console.log(req.body);
+    console.log(
+      "....................body.body after paynment...................."
+    );
+
+    console.log(req.body.Body);
+    console.log(
+      "....................body.body.stkcallback after paynment...................."
+    );
+    console.log(req.body.Body.stkCallback.CallbackMetadata);
+
+    res.send({ resp: req.body.Body.stkCallback });
+  } catch (error) {
+    console.log("call back error: ", error.message);
+    res.status(500).send({ message: "err caught at callback", err: error });
+  }
 };
 
 function Timestamp() {

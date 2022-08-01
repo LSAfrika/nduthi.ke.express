@@ -4,7 +4,8 @@
   "description": "nduthi backend",
   "main": "index.js",
   "scripts": {
-    "start": "supervisor index.js"
+    "start": "supervisor index.js",
+    "online": "cd c:/ngrok && ngrok http 5050"
   },
   "author": "lstudios afrika",
   "license": "ISC",

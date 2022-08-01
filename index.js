@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const mongoose = require("mongoose");
+const mpesamodel = require("./models/mpesarefrence.model");
 const upload = require("express-fileupload");
 
 const LocalDBconnection = `mongodb://localhost:27017/NduthiDB`;
@@ -47,14 +48,22 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-// randomgenerator();
+async function updatemodel() {
+  try {
+    const mpesaref = await mpesamodel.find();
 
-// function test() {
-//   const array = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-//   array.forEach((e) => {
-//     console.log(e);
-//   });
-//   console.log("complete loop");
-// }
+    const setnumber = {
+      phonenumber: 0,
+    };
+    if (mpesaref) {
+      //  console.log("mpesa docs \n", mpesaref);
+      mpesaref.forEach(async (doc) => {
+        Object.assign(doc, setnumber);
+        // console.log("updated doc: \n", doc);
+        await doc.save();
+      });
+    }
+  } catch (error) {}
+}
 
-// test();
+// updatemodel();

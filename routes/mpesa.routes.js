@@ -12,7 +12,7 @@ const {
 } = require("../mpesa/mpesa.payments");
 
 //* ADD  PARAMS ID TOGET SPECIFICUSER
-
+//* authtoken
 router.get("/stkpush", authtoken, stkpush);
 
 router.get("/registerurls", authtoken, registerurl);
