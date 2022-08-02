@@ -2,8 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const mongoose = require("mongoose");
-const mpesamodel = require("./models/mpesarefrence.model");
+const adsmodel = require("./models/Advert.model");
 const upload = require("express-fileupload");
+const dayjs = require("dayjs");
+// import dateTime from "date-time";
 
 const LocalDBconnection = `mongodb://localhost:27017/NduthiDB`;
 // app.use(express.json());
@@ -50,20 +52,34 @@ mongoose
 
 async function updatemodel() {
   try {
-    const mpesaref = await mpesamodel.find();
+    const adref = await adsmodel.find();
 
-    const setnumber = {
-      phonenumber: 0,
+    const setdate = {
+      adactivation: Date.now(),
     };
-    if (mpesaref) {
-      //  console.log("mpesa docs \n", mpesaref);
-      mpesaref.forEach(async (doc) => {
-        Object.assign(doc, setnumber);
+    if (adref) {
+      console.log("adverts docs \n", adref);
+      adref.forEach(async (doc) => {
+        Object.assign(doc, setdate);
         // console.log("updated doc: \n", doc);
         await doc.save();
       });
     }
   } catch (error) {}
 }
+
+async function datetest() {
+  try {
+    const nextmonth = dayjs().add(1, "month");
+
+    console.log("next month: ", nextmonth.toDate());
+
+    nextmonthstring = dayjs(nextmonth.toDate());
+    const isodatestamp = Math.round(new Date(nextmonthstring).getTime());
+    console.log("nd: ", isodatestamp);
+  } catch (error) {}
+}
+
+//datetest();
 
 // updatemodel();

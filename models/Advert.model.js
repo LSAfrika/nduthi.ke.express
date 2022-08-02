@@ -12,6 +12,7 @@ const Adschema = new mongoose.Schema(
     county: { type: String, required: true },
     subcounty: { type: String, required: true },
     mpesaid: { type: String, required: true },
+    adactivation: { type: Number, default: Date.now() },
     ownerid: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "usermodel",

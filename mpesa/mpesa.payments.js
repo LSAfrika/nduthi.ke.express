@@ -1,6 +1,9 @@
 const axios = require("axios").default;
 const mpesamodel = require("../models/mpesarefrence.model");
 const LNMORecipts = require("../models/LNMO.model");
+const admodel = require("../models/Advert.model");
+const dayjs = require("dayjs");
+
 exports.getaccesstoken = async (req, res) => {
   try {
     //*     get access token using consumer key and consumer secret
@@ -22,17 +25,17 @@ exports.stkpush = async (req, res) => {
     const phonenumbersave = parseInt(no);
 
     const boolnum = isNaN(phonenumbersave);
-    console.log(boolnum);
+    // console.log(boolnum);
     if (boolnum) {
       return res.send("please enter valid phone number");
     }
     console.log(mpesaid, phonenumbersave);
     mpesaref = await mpesamodel.findOne({ accountref: mpesaid });
 
-    console.log("ref before save: ", mpesaref.phonenumber);
+    // console.log("ref before save: ", mpesaref.phonenumber);
     if (mpesaref) {
       mpesaref.phonenumber = phonenumbersave;
-      console.log(mpesaref);
+      // console.log(mpesaref);
       await mpesaref.save();
     }
 
@@ -70,7 +73,7 @@ exports.stkpush = async (req, res) => {
         PartyB: "174379",
         PhoneNumber: `${phonenumbersave}`,
         CallBackURL:
-          "https://bb1d-102-167-11-136.in.ngrok.io/payments/stkcallback",
+          "https://fec6-154-122-124-47.eu.ngrok.io/payments/stkcallback",
         AccountReference: `${mpesaid}`,
         TransactionDesc: `payment for ${mpesaid}`,
       },
@@ -87,46 +90,65 @@ exports.stkpush = async (req, res) => {
 
 exports.stkcallback = async (req, res) => {
   try {
-    console.log(req.body.Body.stkCallback);
-    if (req.body.Body.stkCallback.ResultCode === 0) {
-      // console.log(
-      //   "....................path to log req.body.Body.stkCallback.CallbackMetadata ...................."
-      // );
+    console.log("callbackdata:\n", req.body.Body.stkCallback);
+    const stkbody = req.body.Body.stkCallback;
+    console.log("stkbody:\n", stkbody);
+    // console.log(req.body.Body.stkCallback);
+    // const stkbody = req.body.Body.stkCallback;
+    //console.log("stk body const:\n ", stkbody);
+    if (stkbody.ResultCode === 0) {
+      // //* get metadata from call back
+      const responsearray = stkbody.CallbackMetadata.Item;
 
-      // console.log(req.body.Body.stkCallback.CallbackMetadata);
-
-      const responsearray = req.body.Body.stkCallback.CallbackMetadata.Item;
-
-      const receiptsave = await LNMORecipts({
-        Amount: responsearray[0].Value,
-        MpesaReceiptNumber: responsearray[1].Value,
-        Balance: responsearray[2].Value,
-        TransactionDate: responsearray[3].Value,
-        PhoneNumber: responsearray[4].Value,
-      });
-
-      console.log("receipt to save: ", receiptsave);
-
-      const savedreceipt = await receiptsave.save();
-      console.log("saved receipt: ", savedreceipt);
-      const cellnumber =
-        req.body.Body.stkCallback.CallbackMetadata.Item[
-          req.body.Body.stkCallback.CallbackMetadata.Item.length - 1
-        ].Value;
-      //  console.log("phone number: ", cellnumber);
+      const cellnumber = responsearray[responsearray.length - 1].Value;
+      // console.log("payment number: ", cellnumber);
 
       const mpesapaymentdoc = await mpesamodel.findOne({
         phonenumber: cellnumber,
       });
 
-      if (mpesapaymentdoc) {
-        console.log("mpesa doc: ", mpesapaymentdoc);
+      // console.log(("mpesa accnt doc: ", mpesapaymentdoc));
+      if (!mpesapaymentdoc) return;
+      // // console.log("mpesa doc: ", mpesapaymentdoc);
+      mpesapaymentdoc.phonenumber = 0;
+      await mpesapaymentdoc.save();
+
+      console.log("mpesa doc after removing phone number: ", mpesapaymentdoc);
+
+      const retrivead = await admodel.findOne({
+        mpesaid: mpesapaymentdoc.accountref,
+      });
+
+      if (retrivead) {
+        console.log("ad to update: \n", retrivead);
+
+        const nextmonth = dayjs().add(1, "month");
+
+        console.log("next month: ", nextmonth.toDate());
+
+        nextmonthstring = dayjs(nextmonth.toDate());
+        const updatetimestamp = Math.round(new Date(nextmonthstring).getTime());
+        console.log("nm: ", updatetimestamp);
+        console.log("tm: ", Date.now());
+
+        retrivead.adactivation = updatetimestamp;
+        await retrivead.save();
+
+        console.log("updated ad: ", retrivead);
       }
-      console.log("phone number after payment: ", cellnumber);
-    } else if (req.body.Body.stkCallback.ResultCode === 1032) {
+      // console.log("ad to update: \n", retrivead);
+
+      return;
+    } else if (
+      req.body.Body.stkCallback.ResultCode === 1032 ||
+      req.body.Body.stkCallback.ResultDesc === "Request cancelled by user"
+    ) {
       console.log("....................error....................");
 
       console.log(req.body.Body.stkCallback.ResultDesc);
+    } else {
+      console.log("error encountered: \n", stkbody);
+      console.log();
     }
   } catch (error) {
     console.log("stk callback error message: ", error.message);
@@ -146,15 +168,16 @@ exports.registerurl = async (req, res) => {
         ShortCode: "600610",
         ResponseType: "Completed",
         ConfirmationURL:
-          "https://bb1d-102-167-11-136.in.ngrok.io/payments/confirmation",
+          "https://fec6-154-122-124-47.eu.ngrok.io/payments/confirmation",
         ValidationURL:
-          "https://bb1d-102-167-11-136.in.ngrok.io/payments/validation",
+          "https://fec6-154-122-124-47.eu.ngrok.io/payments/validation",
       },
       {
         headers: { Authorization: auth },
       }
     );
-    console.log("registreation of url initiated: ", response);
+    console.log("registreation of url initiated: ", response.data);
+    res.send("registration successful");
   } catch (error) {
     console.log("error: ", error.response);
     res
@@ -173,7 +196,7 @@ exports.simulatepaybill = async (req, res) => {
       {
         CommandID: "CustomerPayBillOnline",
         Amount: "10",
-        Msisdn: "254724628580",
+        Msisdn: "254708374149",
         BillRefNumber: "00000",
         ShortCode: "600247",
       },
@@ -194,14 +217,18 @@ exports.validation = async (req, res) => {
     res
       .status(200)
       .send({ message: "validation  url registered", body: req.body });
-  } catch (error) {}
+  } catch (error) {
+    console.log("validation error; ", error);
+  }
 };
 
 exports.confirmation = async (req, res) => {
   try {
     console.log("confirmation: ", req.body);
     res.status(200).send({ message: "confirmation url registered" });
-  } catch (error) {}
+  } catch (error) {
+    console.log("confirmation error; ", error);
+  }
 };
 
 exports.callback = async (req, res) => {
