@@ -73,7 +73,7 @@ exports.stkpush = async (req, res) => {
         PartyB: "174379",
         PhoneNumber: `${phonenumbersave}`,
         CallBackURL:
-          "https://fec6-154-122-124-47.eu.ngrok.io/payments/stkcallback",
+          "https://b680-154-122-124-47.eu.ngrok.io/payments/stkcallback",
         AccountReference: `${mpesaid}`,
         TransactionDesc: `payment for ${mpesaid}`,
       },
@@ -108,37 +108,41 @@ exports.stkcallback = async (req, res) => {
       });
 
       // console.log(("mpesa accnt doc: ", mpesapaymentdoc));
-      if (!mpesapaymentdoc) return;
-      // // console.log("mpesa doc: ", mpesapaymentdoc);
-      mpesapaymentdoc.phonenumber = 0;
-      await mpesapaymentdoc.save();
+      if (mpesapaymentdoc) {
+        // // console.log("mpesa doc: ", mpesapaymentdoc);
+        mpesapaymentdoc.phonenumber = 0;
+        await mpesapaymentdoc.save();
 
-      console.log("mpesa doc after removing phone number: ", mpesapaymentdoc);
+        console.log("mpesa doc after removing phone number: ", mpesapaymentdoc);
 
-      const retrivead = await admodel.findOne({
-        mpesaid: mpesapaymentdoc.accountref,
-      });
+        const retrivead = await admodel.findOne({
+          mpesaid: mpesapaymentdoc.accountref,
+        });
 
-      if (retrivead) {
-        console.log("ad to update: \n", retrivead);
+        if (retrivead) {
+          console.log("ad to update: \n", retrivead);
 
-        const nextmonth = dayjs().add(1, "month");
+          const nextmonth = dayjs().add(1, "month");
 
-        console.log("next month: ", nextmonth.toDate());
+          console.log("next month: ", nextmonth.toDate());
 
-        nextmonthstring = dayjs(nextmonth.toDate());
-        const updatetimestamp = Math.round(new Date(nextmonthstring).getTime());
-        console.log("nm: ", updatetimestamp);
-        console.log("tm: ", Date.now());
+          nextmonthstring = dayjs(nextmonth.toDate());
+          const updatetimestamp = Math.round(
+            new Date(nextmonthstring).getTime()
+          );
 
-        retrivead.adactivation = updatetimestamp;
-        await retrivead.save();
+          retrivead.adactivation = updatetimestamp;
+          await retrivead.save();
 
-        console.log("updated ad: ", retrivead);
+          console.log("updated ad: ", retrivead);
+          console.log("nm: ", updatetimestamp);
+          console.log("tm: ", Date.now());
+          console.log("redirect to ");
+
+          res.redirect("/payments/success");
+        }
       }
       // console.log("ad to update: \n", retrivead);
-
-      return;
     } else if (
       req.body.Body.stkCallback.ResultCode === 1032 ||
       req.body.Body.stkCallback.ResultDesc === "Request cancelled by user"
@@ -153,6 +157,33 @@ exports.stkcallback = async (req, res) => {
   } catch (error) {
     console.log("stk callback error message: ", error.message);
     console.log("stk callback full error : ", error);
+  }
+};
+
+exports.stkcallbacksuccess = async (req, res) => {
+  try {
+    const { mpesa } = req.query;
+
+    const paidad = await admodel.findOne({ mpesaid: mpesa });
+
+    if (paidad) {
+      console.log("ad time stamp: ", paidad.adactivation);
+      if (paidad.adactivation < Date.now())
+        return res.send({ message: "ad has not been paid" });
+
+      const actualtimestamp = paidad.adactivation + 10800000;
+      console.log("timestamp: ", paidad.adactivation);
+      const expirydate = dayjs(actualtimestamp);
+      console.log("exppiry date: ", expirydate);
+      res.send({ message: `ad is active untill ${expirydate}` });
+    }
+  } catch (error) {
+    console.log("success callback error: ", error);
+    res.send({
+      message: "error at success callback",
+      errmessage: error.message,
+      fullerr: error,
+    });
   }
 };
 

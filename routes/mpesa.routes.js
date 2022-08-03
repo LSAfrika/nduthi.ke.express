@@ -9,6 +9,7 @@ const {
   registerurl,
   validation,
   confirmation,
+  stkcallbacksuccess,
 } = require("../mpesa/mpesa.payments");
 
 //* ADD  PARAMS ID TOGET SPECIFICUSER
@@ -18,6 +19,7 @@ router.get("/stkpush", authtoken, stkpush);
 router.get("/registerurls", authtoken, registerurl);
 router.get("/testaccesstoken", authtoken, getaccesstoken);
 router.get("/simulatepaybill", authtoken, simulatepaybill);
+router.get("/success", stkcallbacksuccess);
 
 router.post("/stkcallback", stkcallback);
 router.post("/validation", validation);
