@@ -6,7 +6,7 @@ exports.getad = async (req, res) => {
     const ad = await Admodel.findById(id);
 
     if (ad) {
-      res.send({ ad });
+      res.send({ ...ad._doc });
     }
   } catch (error) {
     console.log("error: ", error.message);
@@ -16,17 +16,57 @@ exports.getad = async (req, res) => {
 
 exports.getallads = async (req, res) => {
   try {
-    id = req.params.id;
     const ads = await Admodel.find().populate(
       "ownerid",
       "username phone createdAt"
     );
+    //{
+    //  adactivation: { $gt: Date.now() },
+    //  }
 
+    let returnedads = [];
     if (ads) {
-      res.send({ ads });
+      ads.forEach((ad) => {
+        const {
+          _id,
+          brand,
+          name,
+          enginecc,
+          price,
+          negotiable,
+          condition,
+          county,
+          subcounty,
+          mpesaid,
+          ownerid,
+          counter,
+          Images,
+          createdAt,
+        } = ad;
+        const resad = {
+          id: _id,
+          brand,
+          name,
+          enginecc,
+          price,
+          negotiable,
+          condition,
+          county,
+          subcounty,
+          mpesaid,
+          ownerid,
+          counter,
+          Images,
+          createdAt,
+        };
+
+        returnedads.push(resad);
+      });
+      console.log(returnedads);
+      res.send({ returnedads });
     }
   } catch (error) {
-    console.log("error: ", error.message);
+    console.log("error: ", error);
     res.send({ err: error.message });
   }
 };

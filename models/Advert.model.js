@@ -15,7 +15,7 @@ const Adschema = new mongoose.Schema(
     adactivation: { type: Number, default: Date.now() },
     ownerid: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "usermodel",
+      ref: "USERS",
       required: true,
     },
     counter: { type: Number, required: true, default: 0 },
@@ -24,4 +24,4 @@ const Adschema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Adsmodel", Adschema);
+module.exports = mongoose.model("ADS", Adschema);

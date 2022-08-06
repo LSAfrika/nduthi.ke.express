@@ -34,7 +34,8 @@ exports.createad = async (req, res) => {
       // console.log("keys: ", keys);
       imgentries.forEach(async (img) => {
         let filepath = dirpath + "/" + imgobject[img].name;
-        let savepath = "public/" + filepath;
+
+        let imagepath = "http://localhost:5050/" + filepath;
         let imagebinary = imgobject[img].data;
         // console.log(imgobject[img].data);
 
@@ -44,7 +45,7 @@ exports.createad = async (req, res) => {
           }
         });
 
-        images.push(filepath);
+        images.push(imagepath);
         start++;
       });
 

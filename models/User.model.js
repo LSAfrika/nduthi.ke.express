@@ -7,10 +7,12 @@ const Userschema = new mongoose.Schema(
     fbuid: { type: String, required: true },
     profileimg: { type: String, required: false },
     phone: { type: Number, required: true },
+    //* add default pic in front end
+    profilepic: { type: String },
     account: { type: String, required: true, enum: ["company", "individual"] },
     createdat: { type: Number, require: true, default: Date.now() },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("usermodel", Userschema);
+module.exports = mongoose.model("USERS", Userschema);

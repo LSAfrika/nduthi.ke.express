@@ -2,9 +2,9 @@ const usermodel = require("../../models/User.model");
 
 exports.createuser = async (req, res) => {
   try {
-    const { username, email, uid, phone, account } = req.body;
+    const { username, email, phone, account, fbuid } = req.body;
 
-    console.log("values: ", username, email, uid, phone);
+    console.log("values: ", username, email, phone, fbuid);
     const firebaseuid = await usermodel.findOne({ email: email });
 
     if (firebaseuid) {
@@ -14,9 +14,9 @@ exports.createuser = async (req, res) => {
     const newuser = new usermodel({
       username,
       email,
-      uid,
       phone,
       account,
+      fbuid,
     });
     const createduser = await newuser.save();
 

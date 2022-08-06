@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 module.exports = mongoose.model(
-  "LNMOmodel",
+  "LNMO",
   new mongoose.Schema({
     Amount: { type: Number, required: true },
     MpesaReceiptNumber: { type: String, required: true },
