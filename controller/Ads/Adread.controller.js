@@ -131,3 +131,25 @@ exports.getalluserads = async (req, res) => {
     res.send({ err: error.message });
   }
 };
+
+exports.similarads = async (req, res) => {
+  try {
+    const count = await Admodel.count();
+    console.log("totaldocs: \n", count);
+    const minimumcount = count - 3;
+    const skip = Math.floor(Math.random() * minimumcount);
+    console.log("random gen: ", skip);
+
+    const ad = await Admodel.find()
+      .limit(3)
+      .skip(skip * 1)
+      .populate("ownerid", "username phone createdAt");
+
+    if (ad) {
+      res.send({ ad });
+    }
+  } catch (error) {
+    console.log("error: ", error.message);
+    res.send({ err: error.message });
+  }
+};

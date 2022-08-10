@@ -6,6 +6,7 @@ const {
   getad,
   getallads,
   getalluserads,
+  similarads,
 } = require("../controller/Ads/Adread.controller");
 const {
   updatead,
@@ -19,6 +20,7 @@ router.post("/create", dirmiddleware, createad);
 router.get("/get/:id", getad);
 router.get("/getuserads/:id", getalluserads);
 router.get("/get/", getallads);
+router.get("/similarads/", similarads);
 
 router.patch("/update/:id", updatead);
 router.patch("/updatecounter/:id", viewcounter);

@@ -27,7 +27,7 @@ exports.viewcounter = async (req, res) => {
       // console.log("update counter: ", ad);//
 
       const updatecounter = await ad.save();
-      console.log("counter updated: ", updatecounter);
+      // console.log("counter updated: ", updatecounter);
 
       res.status(202).send({
         message: "counter updated",
