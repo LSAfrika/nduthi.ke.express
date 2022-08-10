@@ -24,7 +24,7 @@ exports.viewcounter = async (req, res) => {
 
     if (ad) {
       ad.counter++;
-      // console.log("update counter: ", ad);//
+      // console.log("update counter: ", ad);//new
 
       const updatecounter = await ad.save();
       // console.log("counter updated: ", updatecounter);
