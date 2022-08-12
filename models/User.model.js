@@ -5,11 +5,16 @@ const Userschema = new mongoose.Schema(
     username: { type: String, required: true },
     email: { type: String, required: true },
     fbuid: { type: String, required: true },
-    profileimg: { type: String, required: false },
+    // profileimg: { type: String, required: false },
     phone: { type: Number, required: true },
     //* add default pic in front end
-    profilepic: { type: String },
-    account: { type: String, required: true, enum: ["company", "individual"] },
+    pictureurl: { type: String },
+    account: {
+      type: String,
+      required: true,
+      default: "individual",
+      enum: ["company", "individual"],
+    },
     createdat: { type: Number, require: true, default: Date.now() },
   },
   { timestamps: true }

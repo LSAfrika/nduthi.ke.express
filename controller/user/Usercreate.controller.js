@@ -2,12 +2,13 @@ const usermodel = require("../../models/User.model");
 
 exports.createuser = async (req, res) => {
   try {
-    const { username, email, phone, account, fbuid } = req.body;
+    const { username, email, phone, fbuid } = req.body;
 
-    console.log("values: ", username, email, phone, fbuid);
-    const firebaseuid = await usermodel.findOne({ email: email });
+    console.log(" user to create values: ", username, email, phone, fbuid);
+    const firebaseuid = await usermodel.findOne({ fbuid: fbuid });
+    const getemail = await usermodel.findOne({ email: email });
 
-    if (firebaseuid) {
+    if (firebaseuid || getemail) {
       console.log("user is in the data base");
       return res.status(409).send({ message: "user already exists" });
     }
@@ -15,7 +16,6 @@ exports.createuser = async (req, res) => {
       username,
       email,
       phone,
-      account,
       fbuid,
     });
     const createduser = await newuser.save();
