@@ -13,16 +13,17 @@ const {
   viewcounter,
 } = require("../controller/Ads/Adupdate.controller");
 const { dirmiddleware } = require("../middleware/uid.middleware");
+const {authorization}=require('../middleware/auth.middleware')
 //* ADD  PARAMS ID TOGET SPECIFICUSER
 
-router.post("/create", dirmiddleware, createad);
+router.post("/create",authorization, dirmiddleware, createad);
 
 router.get("/get/:id", getad);
 router.get("/getuserads/:id", getalluserads);
 router.get("/get/", getallads);
 router.get("/similarads/", similarads);
 
-router.patch("/update/:id", updatead);
+router.patch("/update/:id",authorization, updatead);
 router.patch("/updatecounter/:id", viewcounter);
 router.delete("/delete/:id");
 

@@ -26,7 +26,7 @@ exports.createad = async (req, res) => {
 
     if (req.files) {
       let dirpath = req.body.imgpath;
-console.log('save path: \n',dirpath);
+      console.log('save path: \n',dirpath);
       const imgobject = req.files;
       const imgentries = Object.keys(imgobject);
       const imglength = imgentries.length;

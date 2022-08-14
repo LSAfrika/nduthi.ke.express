@@ -5,15 +5,18 @@ const { updateuser } = require("../controller/user/Userupdate.controller");
 const {
   getuser,
   getusers,
-  getfirebaseuser,
+  loginfirebase,
+ 
 } = require("../controller/user/Userread.controller");
+const {firebaselogintoken, authorization}=require('../middleware/auth.middleware')
 //* ADD  PARAMS ID TOGET SPECIFICUSER
 
 router.get("/userprofiles", getusers);
 router.get("/userprofile/:id", getuser);
-router.get("/userprofilefirebase/:id", getfirebaseuser);
+router.get("/login",firebaselogintoken, loginfirebase);
 router.post("/userprofile", createuser);
+// router.post("/login", login);
 
-router.patch("/userprofile/:id", updateuser);
+router.patch("/userprofile/:id",authorization, updateuser);
 
 module.exports = router;

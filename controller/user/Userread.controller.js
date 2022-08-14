@@ -1,4 +1,5 @@
 const usermodel = require("../../models/User.model");
+const jwt= require('jsonwebtoken')
 
 exports.getuser = async (req, res) => {
   try {
@@ -18,8 +19,14 @@ exports.getuser = async (req, res) => {
   }
 };
 
-exports.getfirebaseuser = async (req, res) => {
+exports.loginfirebase = async (req, res) => {
   try {
+    const {authtoken}=req.body
+
+    res.send({authtoken})
+
+    return
+
     const userid = req.params.id;
 
     const Getuser = await usermodel.findOne({ fbuid: userid });
