@@ -5,7 +5,7 @@ const { updateuser } = require("../controller/user/Userupdate.controller");
 const {
   getuser,
   getusers,
-  loginfirebase,
+  login,
  
 } = require("../controller/user/Userread.controller");
 const {firebaselogintoken, authorization}=require('../middleware/auth.middleware')
@@ -13,7 +13,7 @@ const {firebaselogintoken, authorization}=require('../middleware/auth.middleware
 
 router.get("/userprofiles", getusers);
 router.get("/userprofile/:id", getuser);
-router.get("/login",firebaselogintoken, loginfirebase);
+router.get("/login",firebaselogintoken, login);
 router.post("/userprofile", createuser);
 // router.post("/login", login);
 

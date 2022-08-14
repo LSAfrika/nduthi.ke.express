@@ -19,24 +19,13 @@ exports.getuser = async (req, res) => {
   }
 };
 
-exports.loginfirebase = async (req, res) => {
+exports.getusers = async (req, res) => {
   try {
-    const {authtoken}=req.body
+    const Getusers = await usermodel.find();
 
-    res.send({authtoken})
-
-    return
-
-    const userid = req.params.id;
-
-    const Getuser = await usermodel.findOne({ fbuid: userid });
-
-    if (Getuser) {
-      console.log("firebase user", Getuser);
-      return res.send({ Getuser });
+    if (Getusers) {
+      res.send({ Getusers });
     }
-    console.log("firebase params: ", userid);
-    res.send({ message: `no user`, id: userid });
 
     //   res.send({ message: "usercreated", user: createduser });
   } catch (error) {
@@ -48,15 +37,14 @@ exports.loginfirebase = async (req, res) => {
   }
 };
 
-exports.getusers = async (req, res) => {
+
+exports.login = async (req, res) => {
   try {
-    const Getusers = await usermodel.find();
+    const {authtoken}=req.body
 
-    if (Getusers) {
-      res.send({ Getusers });
-    }
+    res.send({authtoken})
 
-    //   res.send({ message: "usercreated", user: createduser });
+  
   } catch (error) {
     console.log("get user error: ", error.message);
     res.send({

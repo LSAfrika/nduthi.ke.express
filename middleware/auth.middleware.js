@@ -43,13 +43,13 @@ exports.firebaselogintoken=async (req,res,next)=>{
 
 
         const verified= jwt.decode(token)
-        // console.log('firebase token check: ',verified);
+         //console.log('firebase token check: ',verified);
         const comparefirebaseuid = verified.sub
 
         const getuser = await user.findOne({fbuid:comparefirebaseuid})
 
         if(getuser){
-          //  console.log('login user: ',getuser)
+            console.log('loging in user: ',getuser)
 
             const token =jwt.sign({getuser},process.env.HASHKEY)
             req.body.authtoken=token
@@ -64,7 +64,7 @@ exports.firebaselogintoken=async (req,res,next)=>{
         
     } catch (error) {
         console.log('Auth middleware error: ',error.message);
-        res.send({ message: `error occured during login`,errormsg:error.message  });
+        res.send({ message: `no user`,errormsg:error.message  });
         
     }
 
