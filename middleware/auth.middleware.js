@@ -30,7 +30,7 @@ exports.authorization= async (req,res,next)=>{
 
 }
 
-exports.firebaselogintoken=async (req,res,next)=>{
+exports.firebasetokenlogin=async (req,res,next)=>{
 
     try {
         const reqtoken=req.headers.authorization
@@ -43,7 +43,7 @@ exports.firebaselogintoken=async (req,res,next)=>{
 
 
         const verified= jwt.decode(token)
-         //console.log('firebase token check: ',verified);
+         console.log('firebase token check: ',verified);
         const comparefirebaseuid = verified.sub
 
         const getuser = await user.findOne({fbuid:comparefirebaseuid})
@@ -57,6 +57,46 @@ exports.firebaselogintoken=async (req,res,next)=>{
         }else{
 
             res.send({ message: `no user`, id: comparefirebaseuid });
+        }
+      
+
+ 
+        
+    } catch (error) {
+        console.log('Auth middleware error: ',error.message);
+        res.send({ message: `no user`,errormsg:error.message  });
+        
+    }
+
+
+}
+
+exports.firebasetokensignup=async (req,res,next)=>{
+
+    try {
+        const reqtoken=req.headers.authorization
+
+      
+
+        const token = reqtoken.split(' ')[1]
+  
+
+
+
+        const verified= jwt.decode(token)
+     //    console.log('firebase token check: ',verified);
+        const firebaseuid = verified.sub
+
+        const getuser = await user.findOne({fbuid:firebaseuid})
+
+        if(getuser){
+           
+            return res.send({message: 'user already exsist please login'})
+        }else{
+
+            req.body.fbuid=firebaseuid
+            req.body.email=verified.email
+            next()
         }
       
 

@@ -8,13 +8,14 @@ const {
   login,
  
 } = require("../controller/user/Userread.controller");
-const {firebaselogintoken, authorization}=require('../middleware/auth.middleware')
+const {firebasetokenlogin,firebasetokensignup, authorization}=require('../middleware/auth.middleware')
 //* ADD  PARAMS ID TOGET SPECIFICUSER
 
 router.get("/userprofiles", getusers);
 router.get("/userprofile/:id", getuser);
-router.get("/login",firebaselogintoken, login);
-router.post("/userprofile", createuser);
+router.get("/login",firebasetokenlogin, login);
+router.post("/signup",firebasetokensignup, createuser);
+// router.post("/userprofile", createuser);
 // router.post("/login", login);
 
 router.patch("/userprofile/:id",authorization, updateuser);

@@ -4,7 +4,7 @@ require('dotenv').config()
 
 exports.createuser = async (req, res) => {
   try {
-    const { username, email, phone, fbuid } = req.body;
+    const { username, email, phone, fbuid,account } = req.body;
 
   
 
@@ -18,9 +18,10 @@ exports.createuser = async (req, res) => {
     }
     const newuser = new usermodel({
       username,
-      email,
+      account,
       phone,
       fbuid,
+      email
     });
     const createduser = await newuser.save();
     console.log('created user: ',createduser);
@@ -28,9 +29,6 @@ exports.createuser = async (req, res) => {
 
     const usertoken = await jwt.sign({...createduser._doc},process.env.HASHKEY)
 
-    if(req.files){
-      console.log('profile image: ',req.files.profile);
-    }
 
     res.send({ message: "usercreated", token:usertoken });
   } catch (error) {
