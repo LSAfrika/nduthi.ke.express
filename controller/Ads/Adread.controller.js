@@ -65,7 +65,7 @@ exports.getallads = async (req, res) => {
 
         returnedads.push(resad);
       });
-      console.log(returnedads);
+      //  console.log(returnedads);
       res.send({ returnedads });
     }
   } catch (error) {
@@ -123,12 +123,12 @@ exports.getalluserads = async (req, res) => {
 
         returnedads.push(resad);
       });
-      console.log(returnedads);
+      // console.log(returnedads);
       res.send({ returnedads });
     }
   } catch (error) {
     console.log("error: ", error);
-    res.send({ err: error.message });
+    res.send({ errmsg: error.message, fullerr: error });
   }
 };
 
