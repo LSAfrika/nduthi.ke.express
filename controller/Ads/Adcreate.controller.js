@@ -33,16 +33,17 @@ exports.createad = async (req, res) => {
 
       // console.log("keys: ", keys);
       imgentries.forEach(async (img) => {
-        let filepath = dirpath + "/" + imgobject[img].name;
+        let imagename=Date.now()+imgobject[img].name;
+        let filepath = dirpath + "/" + imagename
         let savepath= 'public/'+filepath
-        let imglink = filepath.split('/')[1]+"/" + imgobject[img].name;
-        let imagepath = "http://localhost:5050/" + imglink;
+        // let imglink = filepath.split('/')[1]+"/" + imgobject[img].name;
+        let imagepath = "http://localhost:5050/" + filepath;
         let imagebinary = imgobject[img].data;
         // console.log(imgobject[img].data);
 
         fs.writeFileSync(savepath, imagebinary, (err) => {
           if (err) {
-            console.log("error found while uploading ad photos: \n", err.message);
+            console.log("error found while uploading ad photos: \n", err.message,err);
           }
         });
 

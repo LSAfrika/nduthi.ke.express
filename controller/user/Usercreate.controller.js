@@ -61,7 +61,7 @@ console.log('user photo route req.body: \n', ownerid,imgpath);
       console.log('file name to save: \n',filename);
       console.log('file name user photo: \n',filename);
       const imagedata =req.files.profile.data
-      let imagepath = "http://localhost:5050" + imgpath+"/"+filename;
+      let imagepath = "http://localhost:5050"+"/userphoto" + imgpath+"/"+filename;
 
       const savepath =`public/userphoto${imgpath}/`+filename
       console.log('save path: \n',savepath);

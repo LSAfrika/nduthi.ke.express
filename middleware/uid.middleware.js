@@ -7,9 +7,9 @@ exports.dirmiddleware = async (req, res, next) => {
     // console.log("mongoose id: ", mongooseid);
     req.body._id = mongooseid;
 
-    if(fs.existsSync(`public/userphoto/${mongooseid}`)){
+    if(fs.existsSync(`public/adimages/${mongooseid}`)){
       console.log('folder exists');
-      path = `/${mongooseid}`;
+      path = `adimages/${mongooseid}`;
       req.body.imgpath = path;
       return next()
     }
@@ -18,7 +18,8 @@ exports.dirmiddleware = async (req, res, next) => {
       if (err) {
         console.log(err.message);
       } else {
-        path = `/${mongooseid}`;
+      path = `adimages/${mongooseid}`;
+      // path = `/${mongooseid}`;
         req.body.imgpath = path;
         // console.log(req.body);
         next();

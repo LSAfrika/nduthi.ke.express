@@ -18,9 +18,9 @@ app.use(express.json());
 // for parsing application/xwww-
 app.use(express.urlencoded({ extended: true }));
 
-// app.use(express.static(__dirname + "/public/*"));
-app.use(express.static(__dirname + "/public/adimages/"));
-app.use(express.static(__dirname + "/public/userphoto/"));
+app.use(express.static(__dirname + "/public/"));
+// app.use(express.static(__dirname + "/public/adimages/"));
+// app.use(express.static(__dirname + "/public/userphoto/"));
 
 app.get("/", (req, res) => {
   res.send("hello world");
