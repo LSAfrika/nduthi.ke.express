@@ -42,7 +42,7 @@ exports.createad = async (req, res) => {
 
         fs.writeFileSync(savepath, imagebinary, (err) => {
           if (err) {
-            console.log("error found", err.message);
+            console.log("error found while uploading ad photos: \n", err.message);
           }
         });
 
