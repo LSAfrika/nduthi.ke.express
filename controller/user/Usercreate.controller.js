@@ -52,7 +52,7 @@ console.log('user photo route req.body: \n', ownerid,imgpath);
     if(!user) return res.status(404).send({message:'no user found in the data base'})
 
     if (req.files){
-      //  console.log('photo for upload: \n',req.files.profile);
+        // console.log('photo for upload: \n',req.files.profile);
       // const name = req.files.profile.name
       const extension=req.files.profile.mimetype.split('/')[1]
 

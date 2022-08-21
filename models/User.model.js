@@ -8,7 +8,7 @@ const Userschema = new mongoose.Schema(
     // profileimg: { type: String, required: false },
     phone: { type: Number, required: true },
     //* add default pic in front end
-    pictureurl: { type: String },
+    pictureurl: { type: String,required:true,default:'http://localhost:5050/userphoto/profileblue.svg' },
     account: {
       type: String,
       required: true,
