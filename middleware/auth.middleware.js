@@ -9,12 +9,12 @@ exports.authorization = async (req, res, next) => {
     // console.log("token received: ", reqtoken);
 
     const token = reqtoken.split(" ")[1];
-    // console.log("received token: \n", token);
+    const decodedtoken = jwt.decode(token)
+    console.log("decoded token: \n", decodedtoken);
     const verified = jwt.verify(token, process.env.HASHKEY);
     console.log("verfied token: ", verified);
     req.body.ownerid = verified._id;
-
-    // console.log('ad to be saved: ',req.body);
+    
     next();
   } catch (error) {
     console.log("Auth middleware error: ", error.message);
@@ -41,7 +41,8 @@ exports.firebasetokenlogin = async (req, res, next) => {
     if (getuser) {
       console.log("loging in user: ", getuser);
 
-      const token = jwt.sign({ getuser }, process.env.HASHKEY);
+      const token = jwt.sign({ ...getuser._doc }, process.env.HASHKEY);
+      console.log('login genreate token:\n',token);
       req.body.authtoken = token;
       next();
     } else {
@@ -60,7 +61,7 @@ exports.firebasetokensignup = async (req, res, next) => {
     const token = reqtoken.split(" ")[1];
 
     const verified = jwt.decode(token);
-    //    console.log('firebase token check: ',verified);
+        console.log('firebase token check: ',verified);
     const firebaseuid = verified.sub;
 
     const getuser = await user.findOne({ fbuid: firebaseuid });

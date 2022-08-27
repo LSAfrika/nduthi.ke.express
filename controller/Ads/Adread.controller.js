@@ -20,7 +20,7 @@ exports.getad = async (req, res) => {
 exports.getallads = async (req, res) => {
   try {
     const ads = await Admodel.find({
-      adactivation: { $gt: Date.now() },
+      // adactivation: { $gt: Date.now() },
     }).populate("ownerid", "username phone createdAt");
     //{
     //  adactivation: { $gt: Date.now() },

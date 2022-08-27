@@ -15,7 +15,7 @@ exports.updateuser = async (req, res) => {
       const result = await updateuser.save();
 
       const authtoken = await jwt.sign(
-        { ...updateuser._doc },
+        { ...result._doc },
         process.env.HASHKEY
       );
       console.log("token: \n", authtoken);
