@@ -73,7 +73,7 @@ exports.stkpush = async (req, res) => {
         PartyB: "174379",
         PhoneNumber: `${phonenumbersave}`,
         CallBackURL:
-          "https://b680-154-122-124-47.eu.ngrok.io/payments/stkcallback",
+          "https://warm-points-lick-102-167-122-250.loca.lt/payments/stkcallback",
         AccountReference: `${mpesaid}`,
         TransactionDesc: `payment for ${mpesaid}`,
       },
@@ -90,6 +90,9 @@ exports.stkpush = async (req, res) => {
 
 exports.stkcallback = async (req, res) => {
   try {
+    console.log("callbackdata:\n", req);
+
+    return;
     console.log("callbackdata:\n", req.body.Body.stkCallback);
     const stkbody = req.body.Body.stkCallback;
     console.log("stkbody:\n", stkbody);
@@ -199,9 +202,9 @@ exports.registerurl = async (req, res) => {
         ShortCode: "600610",
         ResponseType: "Completed",
         ConfirmationURL:
-          "https://fec6-154-122-124-47.eu.ngrok.io/payments/confirmation",
+          "https://warm-points-lick-102-167-122-250.loca.lt/payments/confirmation",
         ValidationURL:
-          "https://fec6-154-122-124-47.eu.ngrok.io/payments/validation",
+          "https://warm-points-lick-102-167-122-250.loca.lt/validation",
       },
       {
         headers: { Authorization: auth },

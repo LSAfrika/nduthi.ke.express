@@ -19,10 +19,9 @@ exports.getad = async (req, res) => {
 
 exports.getallads = async (req, res) => {
   try {
-    const ads = await Admodel.find().populate(
-      "ownerid",
-      "username phone createdAt"
-    );
+    const ads = await Admodel.find({
+      adactivation: { $gt: Date.now() },
+    }).populate("ownerid", "username phone createdAt");
     //{
     //  adactivation: { $gt: Date.now() },
     //  }
@@ -77,10 +76,10 @@ exports.getallads = async (req, res) => {
 exports.getalluserads = async (req, res) => {
   try {
     const id = req.params.id;
-    const ads = await Admodel.find({ ownerid: id }).populate(
-      "ownerid",
-      "username phone createdAt"
-    );
+    const ads = await Admodel.find({
+      ownerid: id,
+      // adactivation: { $gt: Date.now() },
+    }).populate("ownerid", "username phone createdAt");
     //{
     //  adactivation: { $gt: Date.now() },
     //  }
@@ -122,6 +121,66 @@ exports.getalluserads = async (req, res) => {
         };
 
         returnedads.push(resad);
+      });
+      // console.log(returnedads);
+      res.send({ returnedads });
+    }
+  } catch (error) {
+    console.log("error: ", error);
+    res.send({ errmsg: error.message, fullerr: error });
+  }
+};
+exports.getalluseradsdashboard = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const ads = await Admodel.find({ ownerid: id }).populate(
+      "ownerid",
+      "username phone createdAt"
+    );
+    //{
+    //  adactivation: { $gt: Date.now() },
+    //  }
+
+    let returnedads = [];
+    if (ads) {
+      ads.forEach((ad) => {
+        // const {
+        //   _id,
+        //   brand,
+        //   name,
+        //   enginecc,
+        //   price,
+        //   negotiable,
+        //   condition,
+        //   county,
+        //   subcounty,
+        //   mpesaid,
+        //   ownerid,
+        //   counter,
+        //   Images,
+        //   createdAt,
+        //   adactivation
+        // } = ad;
+        // const resad = {
+        //   id: _id,
+        //   brand,
+        //   name,
+        //   enginecc,
+        //   price,
+        //   negotiable,
+        //   condition,
+        //   county,
+        //   subcounty,
+        //   mpesaid,
+        //   ownerid,
+        //   counter,
+        //   Images,
+        //   createdAt,
+        //   adactivation
+        // };
+
+        returnedads.push(ad);
+        // returnedads.push(resad);
       });
       // console.log(returnedads);
       res.send({ returnedads });

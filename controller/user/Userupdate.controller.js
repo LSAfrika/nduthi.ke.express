@@ -1,4 +1,5 @@
 const usermodel = require("../../models/User.model");
+const jwt = require("jsonwebtoken");
 
 exports.updateuser = async (req, res) => {
   try {
@@ -13,7 +14,17 @@ exports.updateuser = async (req, res) => {
       Object.assign(updateuser, updatefields);
       const result = await updateuser.save();
 
-      res.send({ result, message: "user updated successfully" });
+      const authtoken = await jwt.sign(
+        { ...updateuser._doc },
+        process.env.HASHKEY
+      );
+      console.log("token: \n", authtoken);
+
+      res.send({
+        result,
+        message: "user updated successfully",
+        authtoken,
+      });
     }
 
     //   res.send({ message: "usercreated", user: createduser });

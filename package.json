@@ -6,7 +6,7 @@
   "scripts": {
     "start": "supervisor index.js",
     "dev": "nodemon index.js",
-    "online": "cd c:/ngrok && ngrok http 5050"
+    "online": "cd C:/ngrok ngrok --port 5050"
   },
   "author": "lstudios afrika",
   "license": "ISC",

@@ -9,10 +9,10 @@ exports.authorization = async (req, res, next) => {
     // console.log("token received: ", reqtoken);
 
     const token = reqtoken.split(" ")[1];
-
+    // console.log("received token: \n", token);
     const verified = jwt.verify(token, process.env.HASHKEY);
-    // console.log('verfied token: ',verified);
-    req.body.ownerid = verified.getuser._id;
+    console.log("verfied token: ", verified);
+    req.body.ownerid = verified._id;
 
     // console.log('ad to be saved: ',req.body);
     next();
