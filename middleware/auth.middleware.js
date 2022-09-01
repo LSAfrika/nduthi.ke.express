@@ -9,12 +9,12 @@ exports.authorization = async (req, res, next) => {
     // console.log("token received: ", reqtoken);
 
     const token = reqtoken.split(" ")[1];
-    const decodedtoken = jwt.decode(token)
+    const decodedtoken = jwt.decode(token);
     console.log("decoded token: \n", decodedtoken);
     const verified = jwt.verify(token, process.env.HASHKEY);
     console.log("verfied token: ", verified);
     req.body.ownerid = verified._id;
-    
+
     next();
   } catch (error) {
     console.log("Auth middleware error: ", error.message);
@@ -22,6 +22,29 @@ exports.authorization = async (req, res, next) => {
       message: "error occured during authorization",
       errmsg: error.message,
       errfull: error,
+    });
+  }
+};
+
+exports.authorizationGuard = async (req, res, next) => {
+  try {
+    const reqtoken = req.headers.authorization;
+
+    // console.log("token received: ", reqtoken);
+
+    const token = reqtoken.split(" ")[1];
+    const decodedtoken = jwt.decode(token);
+    console.log("decoded token: \n", decodedtoken);
+    const verified = jwt.verify(token, process.env.HASHKEY);
+    console.log("verfied token: ", verified);
+    res.send({ true: true, user: verified });
+
+    // next();
+  } catch (error) {
+    console.log("Auth middleware error: ", error.message);
+    // console.log("Auth middleware full error: ", error);
+    res.send({
+      false: false,
     });
   }
 };
@@ -42,7 +65,7 @@ exports.firebasetokenlogin = async (req, res, next) => {
       console.log("loging in user: ", getuser);
 
       const token = jwt.sign({ ...getuser._doc }, process.env.HASHKEY);
-      console.log('login genreate token:\n',token);
+      console.log("login genreate token:\n", token);
       req.body.authtoken = token;
       next();
     } else {
@@ -61,7 +84,7 @@ exports.firebasetokensignup = async (req, res, next) => {
     const token = reqtoken.split(" ")[1];
 
     const verified = jwt.decode(token);
-        console.log('firebase token check: ',verified);
+    console.log("firebase token check: ", verified);
     const firebaseuid = verified.sub;
 
     const getuser = await user.findOne({ fbuid: firebaseuid });
