@@ -15,9 +15,10 @@ const {
 } = require("../controller/Ads/Adupdate.controller");
 const { dirmiddleware } = require("../middleware/uid.middleware");
 const { authorization } = require("../middleware/auth.middleware");
+const { adcheckguard } = require("../middleware/adcheck.middleware");
 //* ADD  PARAMS ID TOGET SPECIFICUSER
 
-router.post("/create", authorization, dirmiddleware, createad);
+router.post("/create", authorization, adcheckguard, dirmiddleware, createad);
 
 router.get("/get/:id", getad);
 router.get("/getuserads/:id", getalluserads);

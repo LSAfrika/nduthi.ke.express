@@ -10,9 +10,9 @@ exports.authorization = async (req, res, next) => {
 
     const token = reqtoken.split(" ")[1];
     const decodedtoken = jwt.decode(token);
-    console.log("decoded token: \n", decodedtoken);
+    // console.log("decoded token: \n", decodedtoken);
     const verified = jwt.verify(token, process.env.HASHKEY);
-    console.log("verfied token: ", verified);
+    // console.log("verfied token: ", verified);
     req.body.ownerid = verified._id;
 
     next();
@@ -37,14 +37,14 @@ exports.authorizationGuard = async (req, res, next) => {
     console.log("decoded token: \n", decodedtoken);
     const verified = jwt.verify(token, process.env.HASHKEY);
     console.log("verfied token: ", verified);
-    res.send({ true: true, user: verified });
+    res.send({ auth: true });
 
     // next();
   } catch (error) {
     console.log("Auth middleware error: ", error.message);
     // console.log("Auth middleware full error: ", error);
     res.send({
-      false: false,
+      auth: false,
     });
   }
 };

@@ -8,11 +8,11 @@ const Adschema = new mongoose.Schema(
     price: { type: Number, required: true },
     negotiable: { type: String, required: true },
     created: { type: Number },
-    condition: { type: String, required: true },
+    condition: { type: String, required: true, enum: ["negotiable", "fixed"] },
     county: { type: String, required: true },
     subcounty: { type: String, required: true },
     mpesaid: { type: String, required: true },
-    adactivation: { type: Number, default: Date.now() },
+    adactivation: { type: Number, required: true },
     ownerid: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "USERS",
