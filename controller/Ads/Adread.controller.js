@@ -90,16 +90,14 @@ exports.getallads = async (req, res) => {
 
 exports.getfilteredads = async (req, res) => {
   try {
-    let finalfilterresults;
     let filteredadsbrand = Admodel;
-    let filteredadscounty = Admodel;
-    let filteredadssubcounty = Admodel;
+
     const pagesize = 5;
     let pagination = req.query.pagination;
-    let _brand = req.query.brand;
-    let _county = req.query.county;
-    let _subcounty = req.query.subcounty;
-    console.log("brand query params: \n", req.query);
+    let _brand = req.query.brand.toLowerCase();
+    let _county = req.query.county.toLowerCase();
+    let _subcounty = req.query.subcounty.toLowerCase();
+    console.log("all params: \n", pagination, _brand, _county, _subcounty);
 
     let paginationnumber = parseInt(pagination);
 

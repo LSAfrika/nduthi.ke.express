@@ -65,15 +65,15 @@ exports.createad = async (req, res) => {
 
     // console.log("images to upload: ", images);
     const adtocreate = await Admodel.create({
-      brand,
+      brand: brand.toLowerCase(),
       name,
       enginecc,
       price,
       negotiable,
       createad,
       condition,
-      county,
-      subcounty,
+      county: county.toLowerCase(),
+      subcounty: subcounty.toLowerCase(),
       ownerid,
       counter,
       mpesaid,
