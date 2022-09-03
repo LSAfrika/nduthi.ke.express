@@ -1,3 +1,4 @@
+const { query } = require("express");
 const Admodel = require("../../models/Advert.model");
 
 exports.getad = async (req, res) => {
@@ -19,12 +20,25 @@ exports.getad = async (req, res) => {
 
 exports.getallads = async (req, res) => {
   try {
+    const pagesize = 5;
+    let pagination = req.query.pagination;
+    console.log("all query params: \n", req.query);
+    // return;
+    let paginationnumber = parseInt(pagination);
+    // console.log("params attained:", paginationnumber);
+    isnotaumber = isNaN(paginationnumber);
+    // console.log("is not a number value: ", isnotaumber);
+    if (isnotaumber === true) {
+      paginationnumber = 0;
+      console.log("params Not a number:", paginationnumber);
+    }
+
     const ads = await Admodel.find({
       // adactivation: { $gt: Date.now() },
-    }).populate("ownerid", "username phone createdAt");
-    //{
-    //  adactivation: { $gt: Date.now() },
-    //  }
+    })
+      .skip(paginationnumber * pagesize)
+      .limit(pagesize)
+      .populate("ownerid", "username phone createdAt");
 
     // let returnedads = [];
     if (ads) {
@@ -67,6 +81,106 @@ exports.getallads = async (req, res) => {
 
       // res.send({ returnedads });
       res.send({ ads });
+    }
+  } catch (error) {
+    console.log("error: ", error);
+    res.send({ err: error.message });
+  }
+};
+
+exports.getfilteredads = async (req, res) => {
+  try {
+    let finalfilterresults;
+    let filteredadsbrand = Admodel;
+    let filteredadscounty = Admodel;
+    let filteredadssubcounty = Admodel;
+    const pagesize = 5;
+    let pagination = req.query.pagination;
+    let _brand = req.query.brand;
+    let _county = req.query.county;
+    let _subcounty = req.query.subcounty;
+    console.log("brand query params: \n", req.query);
+
+    let paginationnumber = parseInt(pagination);
+
+    let isnotaumber = isNaN(paginationnumber);
+
+    if (isnotaumber === true) {
+      paginationnumber = 0;
+      console.log("params Not a number:", paginationnumber);
+    }
+
+    if (_brand !== "" && _county !== "" && _subcounty !== "") {
+      filteredadsbrand = await Admodel.find({
+        // adactivation: { $gt: Date.now() },
+
+        brand: _brand,
+        county: _county,
+        subcounty: _subcounty,
+      })
+        .skip(paginationnumber * pagesize)
+        .limit(pagesize)
+        .populate("ownerid", "username phone createdAt");
+
+      console.log("all aprams polpulated ");
+      return res.send({ filteredadsbrand });
+    }
+    if (_brand !== "" && _county !== "") {
+      filteredadsbrand = await Admodel.find({
+        // adactivation: { $gt: Date.now() },
+
+        brand: _brand,
+        county: _county,
+      })
+        .skip(paginationnumber * pagesize)
+        .limit(pagesize)
+        .populate("ownerid", "username phone createdAt");
+
+      console.log("brand and county polpulated ");
+      return res.send({ filteredadsbrand });
+    }
+    if (_county !== "" && _subcounty !== "") {
+      filteredadsbrand = await Admodel.find({
+        // adactivation: { $gt: Date.now() },
+
+        county: _county,
+        subcounty: _subcounty,
+      })
+        .skip(paginationnumber * pagesize)
+        .limit(pagesize)
+        .populate("ownerid", "username phone createdAt");
+
+      console.log("county and subcounty polpulated ");
+      return res.send({ filteredadsbrand });
+    }
+
+    if (_brand !== "") {
+      filteredadsbrand = await Admodel.find({
+        // adactivation: { $gt: Date.now() },
+
+        brand: _brand,
+      })
+        .skip(paginationnumber * pagesize)
+        .limit(pagesize)
+        .populate("ownerid", "username phone createdAt");
+
+      console.log("only brand  polpulated ");
+
+      return res.send({ filteredadsbrand });
+    }
+    if (_county !== "") {
+      filteredadsbrand = await Admodel.find({
+        // adactivation: { $gt: Date.now() },
+
+        county: _county,
+      })
+        .skip(paginationnumber * pagesize)
+        .limit(pagesize)
+        .populate("ownerid", "username phone createdAt");
+
+      console.log("only county  polpulated ");
+
+      return res.send({ filteredadsbrand });
     }
   } catch (error) {
     console.log("error: ", error);
@@ -213,3 +327,9 @@ exports.similarads = async (req, res) => {
     res.send({ err: error.message });
   }
 };
+
+function brandfilter(brandvalue) {
+  if (brandvalue !== "") return { brand: brandvalue };
+}
+
+//*todo REMEBER TO AD AD ACTIVATION FILTER ON REQUEST IN PRODUCTION

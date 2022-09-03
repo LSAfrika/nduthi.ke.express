@@ -8,6 +8,7 @@ const {
   getalluserads,
   similarads,
   getalluseradsdashboard,
+  getfilteredads,
 } = require("../controller/Ads/Adread.controller");
 const {
   updatead,
@@ -19,6 +20,8 @@ const { adcheckguard } = require("../middleware/adcheck.middleware");
 //* ADD  PARAMS ID TOGET SPECIFICUSER
 
 router.post("/create", authorization, adcheckguard, dirmiddleware, createad);
+
+router.get("/get/filter/", getfilteredads);
 
 router.get("/get/:id", getad);
 router.get("/getuserads/:id", getalluserads);
