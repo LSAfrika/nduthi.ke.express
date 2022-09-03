@@ -42,44 +42,6 @@ exports.getallads = async (req, res) => {
 
     // let returnedads = [];
     if (ads) {
-      // ads.forEach((ad) => {
-      //   const {
-      //     _id,
-      //     brand,
-      //     name,
-      //     enginecc,
-      //     price,
-      //     negotiable,
-      //     condition,
-      //     county,
-      //     subcounty,
-      //     mpesaid,
-      //     ownerid,
-      //     counter,
-      //     Images,
-      //     createdAt,
-      //   } = ad;
-      //   const resad = {
-      //     id: _id,
-      //     brand,
-      //     name,
-      //     enginecc,
-      //     price,
-      //     negotiable,
-      //     condition,
-      //     county,
-      //     subcounty,
-      //     mpesaid,
-      //     ownerid,
-      //     counter,
-      //     Images,
-      //     createdAt,
-      //   };
-
-      //   returnedads.push(resad);
-      // });
-
-      // res.send({ returnedads });
       res.send({ ads });
     }
   } catch (error) {
@@ -94,10 +56,16 @@ exports.getfilteredads = async (req, res) => {
 
     const pagesize = 5;
     let pagination = req.query.pagination;
-    let _brand = req.query.brand.toLowerCase();
-    let _county = req.query.county.toLowerCase();
-    let _subcounty = req.query.subcounty.toLowerCase();
-    console.log("all params: \n", pagination, _brand, _county, _subcounty);
+    let _brand = req.query.brand;
+    let _county = req.query.county;
+    let _subcounty = req.query.subcounty;
+    console.log(
+      "all params: \n",
+      pagination,
+      _brand.toLowerCase(),
+      _county.toLowerCase(),
+      _subcounty.toLowerCase()
+    );
 
     let paginationnumber = parseInt(pagination);
 
@@ -112,9 +80,9 @@ exports.getfilteredads = async (req, res) => {
       filteredadsbrand = await Admodel.find({
         // adactivation: { $gt: Date.now() },
 
-        brand: _brand,
-        county: _county,
-        subcounty: _subcounty,
+        brand: _brand.toLowerCase().trim(),
+        county: _county.toLowerCase().trim(),
+        subcounty: _subcounty.toLowerCase().trim(),
       })
         .skip(paginationnumber * pagesize)
         .limit(pagesize)
@@ -127,8 +95,8 @@ exports.getfilteredads = async (req, res) => {
       filteredadsbrand = await Admodel.find({
         // adactivation: { $gt: Date.now() },
 
-        brand: _brand,
-        county: _county,
+        brand: _brand.toLowerCase().trim(),
+        county: _county.toLowerCase().trim(),
       })
         .skip(paginationnumber * pagesize)
         .limit(pagesize)
@@ -141,8 +109,8 @@ exports.getfilteredads = async (req, res) => {
       filteredadsbrand = await Admodel.find({
         // adactivation: { $gt: Date.now() },
 
-        county: _county,
-        subcounty: _subcounty,
+        county: _county.toLowerCase().trim(),
+        subcounty: _subcounty.toLowerCase().trim(),
       })
         .skip(paginationnumber * pagesize)
         .limit(pagesize)
@@ -156,7 +124,7 @@ exports.getfilteredads = async (req, res) => {
       filteredadsbrand = await Admodel.find({
         // adactivation: { $gt: Date.now() },
 
-        brand: _brand,
+        brand: _brand.toLowerCase().trim(),
       })
         .skip(paginationnumber * pagesize)
         .limit(pagesize)
@@ -170,13 +138,29 @@ exports.getfilteredads = async (req, res) => {
       filteredadsbrand = await Admodel.find({
         // adactivation: { $gt: Date.now() },
 
-        county: _county,
+        county: _county.toLowerCase().trim(),
       })
         .skip(paginationnumber * pagesize)
         .limit(pagesize)
         .populate("ownerid", "username phone createdAt");
 
       console.log("only county  polpulated ");
+      console.log(" county  ads ", filteredadsbrand);
+
+      return res.send({ filteredadsbrand });
+    }
+
+    if (_brand === "" && _county === "" && _subcounty === "") {
+      filteredadsbrand = await Admodel.find({
+        // adactivation: { $gt: Date.now() },
+        // county: _county.toLowerCase().trim(),
+      })
+        .skip(paginationnumber * pagesize)
+        .limit(pagesize)
+        .populate("ownerid", "username phone createdAt");
+
+      console.log("al params empty");
+      // console.log(" county  ads ", filteredadsbrand);
 
       return res.send({ filteredadsbrand });
     }
