@@ -21,7 +21,7 @@ exports.createad = async (req, res) => {
       _id,
     } = req.body;
 
-    console.log("body received by  ad post request", req.body);
+    // console.log("body received by  ad post request", req.body);
     // return;
     let images = [];
     mpesaid = await randomgenerator();
@@ -58,12 +58,12 @@ exports.createad = async (req, res) => {
         start++;
       });
 
-      console.log("images: ", images);
+      // console.log("images: ", images);
 
-      console.log("files uploaded: ", start);
+      // console.log("files uploaded: ", start);
     }
 
-    console.log("images to upload: ", images);
+    // console.log("images to upload: ", images);
     const adtocreate = await Admodel.create({
       brand,
       name,
@@ -88,7 +88,7 @@ exports.createad = async (req, res) => {
       ad: adtocreate,
     });
 
-    console.log("files sync finished uploaded: ", start);
+    // console.log("files sync finished uploaded: ", start);
   } catch (error) {
     console.log("error:", error.message);
   }

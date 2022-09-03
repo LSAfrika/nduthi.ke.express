@@ -33,10 +33,10 @@ exports.authorizationGuard = async (req, res, next) => {
     // console.log("token received: ", reqtoken);
 
     const token = reqtoken.split(" ")[1];
-    const decodedtoken = jwt.decode(token);
-    console.log("decoded token: \n", decodedtoken);
+    // const decodedtoken = jwt.decode(token);
+    // console.log("decoded token: \n", decodedtoken);
     const verified = jwt.verify(token, process.env.HASHKEY);
-    console.log("verfied token: ", verified);
+    console.log("auth guard token verification: ", verified);
     res.send({ auth: true });
 
     // next();

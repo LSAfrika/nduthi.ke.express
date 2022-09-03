@@ -26,46 +26,47 @@ exports.getallads = async (req, res) => {
     //  adactivation: { $gt: Date.now() },
     //  }
 
-    let returnedads = [];
+    // let returnedads = [];
     if (ads) {
-      ads.forEach((ad) => {
-        const {
-          _id,
-          brand,
-          name,
-          enginecc,
-          price,
-          negotiable,
-          condition,
-          county,
-          subcounty,
-          mpesaid,
-          ownerid,
-          counter,
-          Images,
-          createdAt,
-        } = ad;
-        const resad = {
-          id: _id,
-          brand,
-          name,
-          enginecc,
-          price,
-          negotiable,
-          condition,
-          county,
-          subcounty,
-          mpesaid,
-          ownerid,
-          counter,
-          Images,
-          createdAt,
-        };
+      // ads.forEach((ad) => {
+      //   const {
+      //     _id,
+      //     brand,
+      //     name,
+      //     enginecc,
+      //     price,
+      //     negotiable,
+      //     condition,
+      //     county,
+      //     subcounty,
+      //     mpesaid,
+      //     ownerid,
+      //     counter,
+      //     Images,
+      //     createdAt,
+      //   } = ad;
+      //   const resad = {
+      //     id: _id,
+      //     brand,
+      //     name,
+      //     enginecc,
+      //     price,
+      //     negotiable,
+      //     condition,
+      //     county,
+      //     subcounty,
+      //     mpesaid,
+      //     ownerid,
+      //     counter,
+      //     Images,
+      //     createdAt,
+      //   };
 
-        returnedads.push(resad);
-      });
-      //  console.log(returnedads);
-      res.send({ returnedads });
+      //   returnedads.push(resad);
+      // });
+
+      // res.send({ returnedads });
+      res.send({ ads });
     }
   } catch (error) {
     console.log("error: ", error);
