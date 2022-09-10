@@ -1,5 +1,5 @@
 const usermodel = require("../../models/User.model");
-const jwt= require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 exports.getuser = async (req, res) => {
   try {
@@ -37,14 +37,19 @@ exports.getusers = async (req, res) => {
   }
 };
 
-
 exports.login = async (req, res) => {
   try {
-    const {authtoken}=req.body
+    const { authtoken, accesstoken } = req.body;
+    // console.log("access token to set cookie:\n", accesstoken);
 
-    res.send({authtoken})
+    res.cookie("access", accesstoken, {
+      httpOnly: true,
+    });
+    //* , { httpOnly: true }
 
-  
+    // console.log("token to be received by user\n", authtoken);
+    console.log("cookies sent to user after log in\n",req);
+    res.send({ authtoken });
   } catch (error) {
     console.log("get user error: ", error.message);
     res.send({
@@ -54,3 +59,8 @@ exports.login = async (req, res) => {
   }
 };
 
+// exports.guard = async (req, res) => {
+//   try {
+//     console.log("guard endpoint request body", req.cookies);
+//   } catch (error) {}
+// };

@@ -5,12 +5,32 @@ const mongoose = require("mongoose");
 const adsmodel = require("./models/Advert.model");
 const upload = require("express-fileupload");
 const dayjs = require("dayjs");
+const cookieParser = require("cookie-parser");
 // import dateTime from "date-time";
 
 const LocalDBconnection = `mongodb://localhost:27017/NduthiDB`;
 // app.use(express.json());
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:4200",
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
+app.use(cors(corsOptions));
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Credentials", true);
+//   res.header("Access-Control-Allow-Origin", req.headers.origin);
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "GET,PUT,POST,DELETE,UPDATE,OPTIONS"
+//   );
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept"
+//   );
+//   next();
+// });
 app.use(upload());
+app.use(cookieParser());
 
 // for parsing application/json
 app.use(express.json());
@@ -23,6 +43,7 @@ app.use(express.static(__dirname + "/public/"));
 // app.use(express.static(__dirname + "/public/userphoto/"));
 
 app.get("/", (req, res) => {
+  console.log("Cookies in aoo: ", req.cookies);
   res.send("hello world");
 });
 

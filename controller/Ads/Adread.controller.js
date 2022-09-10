@@ -3,6 +3,7 @@ const Admodel = require("../../models/Advert.model");
 
 exports.getad = async (req, res) => {
   try {
+    console.log("Cookies: ", req.cookies);
     id = req.params.id;
     const ad = await Admodel.findById(id).populate(
       "ownerid",
@@ -20,6 +21,7 @@ exports.getad = async (req, res) => {
 
 exports.getallads = async (req, res) => {
   try {
+    console.log("Cookies: ", req.cookies);
     const pagesize = 5;
     let pagination = req.query.pagination;
     console.log("all query params: \n", req.query);

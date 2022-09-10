@@ -9,12 +9,14 @@ const {
   getuser,
   getusers,
   login,
+  // guard,
 } = require("../controller/user/Userread.controller");
 const {
   firebasetokenlogin,
   firebasetokensignup,
   authorization,
   authorizationGuard,
+  logout,
 } = require("../middleware/auth.middleware");
 const { userphotomiddleware } = require("../middleware/uid.middleware");
 //* ADD  PARAMS ID TOGET SPECIFICUSER
@@ -24,6 +26,7 @@ router.get("/userprofile/:id", getuser);
 router.get("/guard", authorizationGuard);
 
 router.get("/login", firebasetokenlogin, login);
+router.get("/logout", logout);
 router.post("/signup", firebasetokensignup, createuser);
 router.post("/userphoto", authorization, userphotomiddleware, uploadphoto);
 // router.post("/userprofile", createuser);

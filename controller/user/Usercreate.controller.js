@@ -27,8 +27,24 @@ exports.createuser = async (req, res) => {
 
     const usertoken = await jwt.sign(
       { ...createduser._doc },
-      process.env.HASHKEY
+      process.env.HASHKEY,
+      {
+        expiresIn: "5m",
+      }
     );
+
+    const refreshtoken = await jwt.sign(
+      { ...createduser._doc },
+      process.env.REFRESHKEY,
+      {
+        expiresIn: "1w",
+      }
+    );
+
+    res.cookie("access", refreshtoken, {
+      expires: 604800,
+      httpOnly: true,
+    });
 
     res.send({ message: "Account created successfully", authtoken: usertoken });
   } catch (error) {
