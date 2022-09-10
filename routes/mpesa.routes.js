@@ -1,4 +1,5 @@
 const express = require("express");
+const { authorization } = require("../middleware/auth.middleware");
 const router = express.Router();
 const { authtoken } = require("../mpesa/accesstoken.generator");
 const {
@@ -14,7 +15,7 @@ const {
 
 //* ADD  PARAMS ID TOGET SPECIFICUSER
 //* authtoken
-router.get("/stkpush", authtoken, stkpush);
+router.post("/stkpush", authtoken, stkpush);
 
 router.get("/registerurls", authtoken, registerurl);
 router.get("/testaccesstoken", authtoken, getaccesstoken);

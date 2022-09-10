@@ -105,7 +105,7 @@ exports.firebasetokenlogin = async (req, res, next) => {
       // console.log("loging in user: ", getuser);
 
       const token = await jwt.sign({ ...getuser._doc }, process.env.HASHKEY, {
-        expiresIn: "1m",
+        expiresIn: "15m",
       });
       // console.log("login user token:\n", token);
 

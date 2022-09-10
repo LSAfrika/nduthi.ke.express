@@ -20,7 +20,11 @@ exports.stkpush = async (req, res) => {
   try {
     const auth = "Bearer " + req.body.access_token;
 
-    const { mpesaid, no } = req.query;
+    const { mpesaid, no } = req.body;
+    // res.send({
+    //   message: `api hit \n mpesaid:${mpesaid} \n  phone no: ${no} \n token:${auth}`,
+    // });
+    // return;
 
     const phonenumbersave = parseInt(no);
 
@@ -73,27 +77,26 @@ exports.stkpush = async (req, res) => {
         PartyB: "174379",
         PhoneNumber: `${phonenumbersave}`,
         CallBackURL:
-          "https://warm-points-lick-102-167-122-250.loca.lt/payments/stkcallback",
+          "https://f878-197-232-61-253.ap.ngrok.io/payments/stkcallback",
         AccountReference: `${mpesaid}`,
         TransactionDesc: `payment for ${mpesaid}`,
       },
       { headers: { Authorization: auth } }
     );
-    // * console.log('stk result:',stkresult.data);
 
     res.send({ message: stkresult.data });
   } catch (error) {
-    // * console.log('error encounterd stk push: ',error.message);
+    console.log("error encounterd stk push: ", error.message);
     res.send({ message: error.message, err: error });
   }
 };
 
 exports.stkcallback = async (req, res) => {
   try {
-    console.log("callbackdata:\n", req);
+    // console.log("callbackdata:\n", req);
 
-    return;
     console.log("callbackdata:\n", req.body.Body.stkCallback);
+    // return;
     const stkbody = req.body.Body.stkCallback;
     console.log("stkbody:\n", stkbody);
     // console.log(req.body.Body.stkCallback);
@@ -194,7 +197,7 @@ exports.registerurl = async (req, res) => {
   try {
     const url = "https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl";
     const auth = "Bearer " + req.body.access_token;
-    console.log("token: ", auth);
+    console.log("register url authtoken: ", auth);
 
     const response = await axios.post(
       url,
@@ -202,9 +205,9 @@ exports.registerurl = async (req, res) => {
         ShortCode: "600610",
         ResponseType: "Completed",
         ConfirmationURL:
-          "https://warm-points-lick-102-167-122-250.loca.lt/payments/confirmation",
+          "https://62b0-197-232-61-253.ap.ngrok.io/payments/confirmation",
         ValidationURL:
-          "https://warm-points-lick-102-167-122-250.loca.lt/validation",
+          "https://62b0-197-232-61-253.ap.ngrok.io/payments/validation",
       },
       {
         headers: { Authorization: auth },
