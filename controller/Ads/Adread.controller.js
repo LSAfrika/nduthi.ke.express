@@ -21,7 +21,7 @@ exports.getad = async (req, res) => {
 
 exports.getallads = async (req, res) => {
   try {
-    console.log("Cookies get al ada route: ", req.cookies);
+    console.log("Cookies get al ad route: ", req.cookies);
     const pagesize = 5;
     let pagination = req.query.pagination;
     console.log("all query params: \n", req.query);
@@ -36,7 +36,7 @@ exports.getallads = async (req, res) => {
     }
 
     const ads = await Admodel.find({
-      adactivation: { $gt: Date.now() },
+      // adactivation: { $gt: Date.now() },
     })
       .skip(paginationnumber * pagesize)
       .limit(pagesize)

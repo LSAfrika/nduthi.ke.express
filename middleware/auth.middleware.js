@@ -102,23 +102,23 @@ exports.firebasetokenlogin = async (req, res, next) => {
     const getuser = await user.findOne({ fbuid: comparefirebaseuid });
 
     if (getuser) {
-      // console.log("loging in user: ", getuser);
+       console.log("loging in user: ", getuser);
 
       const token = await jwt.sign({ ...getuser._doc }, process.env.HASHKEY, {
         expiresIn: "15m",
       });
-      // console.log("login user token:\n", token);
+       console.log("login user stroage token:\n", token);
 
-      const Refreshtoken = refreshtoken({ ...getuser._doc });
-      // console.log("login refresh token:\n", Refreshtoken);
+      const Refreshtokenset = refreshtoken({ ...getuser._doc });
+      //  console.log("login cookie refresh token:\n", Refreshtoken);
       req.body.authtoken = token;
-      req.body.accesstoken = Refreshtoken;
+      req.body.accesstoken = Refreshtokenset;
       next();
     } else {
       res.send({ message: `no user`, id: comparefirebaseuid });
     }
   } catch (error) {
-    console.log("Auth middleware error: ", error.message);
+    console.log("login Auth middleware error: ", error.message);
     res.send({ message: `no user`, errormsg: error.message });
   }
 };
@@ -143,7 +143,7 @@ exports.firebasetokensignup = async (req, res, next) => {
       next();
     }
   } catch (error) {
-    console.log("Auth middleware error: ", error.message);
+    console.log("sign up Auth middleware error: ", error.message);
     res.send({ message: `no user`, errormsg: error.message });
   }
 };
