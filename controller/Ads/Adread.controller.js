@@ -27,7 +27,7 @@ exports.getallads = async (req, res) => {
     console.log("all query params: \n", req.query);
     // return;
     let paginationnumber = parseInt(pagination);
-    // console.log("params attained:", paginationnumber);
+    // console.log("params attained:", paginationnumber); 
     isnotaumber = isNaN(paginationnumber);
     // console.log("is not a number value: ", isnotaumber);
     if (isnotaumber === true) {
