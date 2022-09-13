@@ -12,7 +12,7 @@ const Userschema = new mongoose.Schema(
     account: {
       type: String,
       required: true,
-      enum: ["company", "individual"],
+      enum: ["dealer", "individual"],
     },
     createdat: { type: Number, require: true, default: Date.now() },
   },
