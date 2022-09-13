@@ -3,6 +3,7 @@ const mpesamodel = require("../models/mpesarefrence.model");
 const LNMORecipts = require("../models/LNMO.model");
 const admodel = require("../models/Advert.model");
 const dayjs = require("dayjs");
+const{Timestamp}= require("../utilityfunctions/time")
 
 exports.getaccesstoken = async (req, res) => {
   try {
@@ -143,7 +144,7 @@ exports.stkcallback = async (req, res) => {
           console.log("updated ad: ", retrivead);
           console.log("nm: ", updatetimestamp);
           console.log("tm: ", Date.now());
-          console.log("redirect to ");
+          console.log("redirect to success ");
 
           res.redirect("/payments/success");
         }
@@ -289,92 +290,7 @@ exports.callback = async (req, res) => {
   }
 };
 
-function Timestamp() {
-  const timestamp = new Date();
 
-  const date =
-    timestamp.getFullYear() +
-    "" +
-    mapmonth() +
-    mapdate() +
-    "" +
-    maphour() +
-    "" +
-    mapminutes() +
-    "" +
-    mapseconds();
+function Dealerpayment(){
 
-  return date;
-}
-
-function maphour() {
-  const timestamp = new Date();
-  let Returnedhour = "";
-  const hour = timestamp.getHours();
-  if (hour < 10) {
-    Returnedhour = "0" + hour;
-    //     console.log('hour:',Returnedhour);
-    return Returnedhour;
-  } else {
-    Returnedhour = "" + hour;
-    //    console.log(Returnedhour);
-    return Returnedhour;
-  }
-}
-function mapdate() {
-  const timestamp = new Date();
-  let day = "";
-  const date = timestamp.getDate();
-  if (date < 10) {
-    day = "0" + date;
-    //     console.log('date:',date);
-    return day;
-  } else {
-    day = "" + date;
-    //      console.log(day);
-    return day;
-  }
-}
-function mapmonth() {
-  const timestamp = new Date();
-  let returnedmonth = "";
-  const month = timestamp.getMonth();
-  if (month < 10) {
-    returnedmonth = "0" + month;
-    //  console.log('month:',month);
-    return returnedmonth;
-  } else {
-    returnedmonth = "" + date;
-    //  console.log(returnedmonth);
-    return returnedmonth;
-  }
-}
-
-function mapminutes() {
-  const timestamp = new Date();
-  let returnedminutes = "";
-  const minutes = timestamp.getMinutes();
-  if (minutes < 10) {
-    returnedminutes = "0" + minutes;
-    //  console.log('month:',month);
-    return returnedminutes;
-  } else {
-    returnedminutes = "" + minutes;
-    //  console.log(returnedminutes);
-    return returnedminutes;
-  }
-}
-function mapseconds() {
-  const timestamp = new Date();
-  let returnedseconds = "";
-  const seconds = timestamp.getSeconds();
-  if (seconds < 10) {
-    returnedseconds = "0" + seconds;
-    //  console.log('month:',month);
-    return returnedseconds;
-  } else {
-    returnedseconds = "" + seconds;
-    //  console.log(returnedseconds);
-    return returnedseconds;
-  }
 }
