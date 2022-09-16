@@ -3,7 +3,7 @@ const mpesamodel = require("../models/mpesarefrence.model");
 const LNMORecipts = require("../models/LNMO.model");
 const admodel = require("../models/Advert.model");
 const dayjs = require("dayjs");
-const{Timestamp}= require("../utilityfunctions/time")
+const { Timestamp } = require("../utilityfunctions/time");
 
 exports.getaccesstoken = async (req, res) => {
   try {
@@ -78,7 +78,7 @@ exports.stkpush = async (req, res) => {
         PartyB: "174379",
         PhoneNumber: `${phonenumbersave}`,
         CallBackURL:
-          "https://f878-197-232-61-253.ap.ngrok.io/payments/stkcallback",
+          "https://50c3-197-232-61-237.ap.ngrok.io/payments/stkcallback",
         AccountReference: `${mpesaid}`,
         TransactionDesc: `payment for ${mpesaid}`,
       },
@@ -206,9 +206,9 @@ exports.registerurl = async (req, res) => {
         ShortCode: "600610",
         ResponseType: "Completed",
         ConfirmationURL:
-          "https://62b0-197-232-61-253.ap.ngrok.io/payments/confirmation",
+          "https://50c3-197-232-61-237.ap.ngrok.io/payments/confirmation",
         ValidationURL:
-          "https://62b0-197-232-61-253.ap.ngrok.io/payments/validation",
+          "https://50c3-197-232-61-237.ap.ngrok.io/payments/validation",
       },
       {
         headers: { Authorization: auth },
@@ -236,7 +236,7 @@ exports.simulatepaybill = async (req, res) => {
         Amount: "10",
         Msisdn: "254708374149",
         BillRefNumber: "00000",
-        ShortCode: "600247",
+        ShortCode: "174379",
       },
       { headers: { Authorization: auth } }
     );
@@ -290,7 +290,4 @@ exports.callback = async (req, res) => {
   }
 };
 
-
-function Dealerpayment(){
-
-}
+function Dealerpayment() {}

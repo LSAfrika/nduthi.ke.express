@@ -14,12 +14,16 @@ exports.updateuser = async (req, res) => {
       Object.assign(updateuser, updatefields);
       const result = await updateuser.save();
 
-      const authtoken = await jwt.sign(
+      const authtoken = await jwt.sign({ ...result._doc }, process.env.HASHKEY);
+      const accesstoken = await jwt.sign(
         { ...result._doc },
-        process.env.HASHKEY
+        process.env.REFRESHKEY
       );
       console.log("token: \n", authtoken);
 
+      res.cookie("access", accesstoken, {
+        httpOnly: true,
+      });
       res.send({
         result,
         message: "user updated successfully",
