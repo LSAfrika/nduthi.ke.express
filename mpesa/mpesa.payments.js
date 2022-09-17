@@ -2,6 +2,7 @@ const axios = require("axios").default;
 const mpesamodel = require("../models/mpesarefrence.model");
 const LNMORecipts = require("../models/LNMO.model");
 const admodel = require("../models/Advert.model");
+const dealerpaymentinfo = require("../models/dealerpaymentinfo.model");
 const dayjs = require("dayjs");
 const { Timestamp } = require("../utilityfunctions/time");
 
@@ -45,6 +46,80 @@ exports.stkpush = async (req, res) => {
     }
 
     // return;
+    console.log(auth);
+    const timestamp = Timestamp();
+
+    // *  to generate pass word we join the SHORTCODE + PASSKEY + TIMESTAMP into base 64 Buffer.from(shortcode+passkey+timestamp).toString('base64')
+    const passwordbuffer = Buffer.from(
+      "174379" +
+        "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919" +
+        timestamp
+    ).toString("base64");
+    // *  console.log('buffer password: ',passwordbuffer);
+    // * the pass key and time stamp were attained from decoding the encoded password
+    const testpassword = Buffer.from(
+      "174379" +
+        "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919" +
+        "20160216165627"
+    ).toString("base64");
+
+    // * safcom test line 254708374149
+    const stkpushurl =
+      "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
+    const stkresult = await axios.post(
+      stkpushurl,
+      {
+        BusinessShortCode: "174379",
+        Password:
+          "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMTYwMjE2MTY1NjI3",
+        Timestamp: "20160216165627",
+        TransactionType: "CustomerPayBillOnline",
+        Amount: "1",
+        PartyA: `${phonenumbersave}`,
+        PartyB: "174379",
+        PhoneNumber: `${phonenumbersave}`,
+        CallBackURL:
+          "https://50c3-197-232-61-237.ap.ngrok.io/payments/stkcallback",
+        AccountReference: `${mpesaid}`,
+        TransactionDesc: `payment for ${mpesaid}`,
+      },
+      { headers: { Authorization: auth } }
+    );
+
+    res.send({ message: stkresult.data });
+  } catch (error) {
+    console.log("error encounterd stk push: ", error.message);
+    res.send({ message: error.message, err: error });
+  }
+};
+
+exports.stkpushdealer = async (req, res) => {
+  // console.log("token received in stkpush: ", req.body.access_token);
+  try {
+    const auth = "Bearer " + req.body.access_token;
+
+    const { mpesaid, no, ownerid } = req.body;
+    // res.send({
+    //   message: `api hit \n mpesaid:${mpesaid} \n  phone no: ${no} \n token:${auth}`,
+    // });
+    // return;
+
+    const phonenumbersave = parseInt(no);
+
+    const boolnum = isNaN(phonenumbersave);
+    // console.log(boolnum);
+    if (boolnum) {
+      return res.send({ message: "please enter valid phone number" });
+    }
+    // console.log(mpesaid, phonenumbersave);
+    const dealerpaymentrefrence = await dealerpaymentinfo.find({
+      dealerid: ownerid,
+    });
+
+    if (dealerpaymentrefrence) {
+    }
+
+    return;
     console.log(auth);
     const timestamp = Timestamp();
 

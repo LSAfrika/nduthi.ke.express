@@ -25,8 +25,47 @@ exports.authorization = async (req, res, next) => {
       console.log("user from refresh token: ", user);
 
       const authtoken = jwt.sign(user, process.env.HASHKEY);
+      req.body.ownerid = user._id;
+
+      // next()
 
       return res.send({ auth: true, authtoken });
+    }
+
+    res.send({
+      message: "error occured during authorization",
+      errmsg: error.message,
+      errfull: error,
+    });
+  }
+};
+exports.dealerpaymentauthorization = async (req, res, next) => {
+  try {
+    const reqtoken = req.headers.authorization;
+
+    // console.log("token received: ", reqtoken);
+
+    const token = reqtoken.split(" ")[1];
+    const decodedtoken = jwt.decode(token);
+    // console.log("decoded token: \n", decodedtoken);
+    const verified = jwt.verify(token, process.env.HASHKEY);
+    // console.log("verfied token: ", verified);
+    req.body.ownerid = verified._id;
+
+    next();
+  } catch (error) {
+    console.log("Auth middleware error: ", error.message);
+
+    if (error.message === "jwt expired") {
+      const refreshtoken = req.cookies.access;
+      const user = jwt.verify(refreshtoken, process.env.REFRESHKEY);
+      console.log("user from refresh token: ", user);
+
+      const authtoken = jwt.sign(user, process.env.HASHKEY);
+      req.body.ownerid = user._id;
+      req.body.authtoken = authtoken;
+
+      next();
     }
 
     res.send({
@@ -102,12 +141,12 @@ exports.firebasetokenlogin = async (req, res, next) => {
     const getuser = await user.findOne({ fbuid: comparefirebaseuid });
 
     if (getuser) {
-       console.log("loging in user: ", getuser);
+      console.log("loging in user: ", getuser);
 
       const token = await jwt.sign({ ...getuser._doc }, process.env.HASHKEY, {
         expiresIn: "15m",
       });
-       console.log("login user stroage token:\n", token);
+      console.log("login user stroage token:\n", token);
 
       const Refreshtokenset = refreshtoken({ ...getuser._doc });
       //  console.log("login cookie refresh token:\n", Refreshtoken);

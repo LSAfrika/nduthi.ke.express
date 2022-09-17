@@ -1,10 +1,11 @@
 const express = require("express");
-const { authorization } = require("../middleware/auth.middleware");
+const { dealerpaymentauthorization } = require("../middleware/auth.middleware");
 const router = express.Router();
 const { authtoken } = require("../mpesa/accesstoken.generator");
 const {
   getaccesstoken,
   stkpush,
+  stkpushdealer,
   stkcallback,
   simulatepaybill,
   registerurl,
@@ -16,6 +17,12 @@ const {
 //* ADD  PARAMS ID TOGET SPECIFICUSER
 //* authtoken
 router.post("/stkpush", authtoken, stkpush);
+router.post(
+  "/stkpushdealer",
+  dealerpaymentauthorization,
+  authtoken,
+  stkpushdealer
+);
 
 router.get("/registerurls", authtoken, registerurl);
 router.get("/testaccesstoken", authtoken, getaccesstoken);

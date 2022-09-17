@@ -20,6 +20,7 @@ exports.updateuser = async (req, res) => {
         process.env.REFRESHKEY
       );
       console.log("token: \n", authtoken);
+      console.log("token: \n", accesstoken);
 
       res.cookie("access", accesstoken, {
         httpOnly: true,
