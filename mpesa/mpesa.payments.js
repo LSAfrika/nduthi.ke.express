@@ -131,9 +131,11 @@ exports.stkpushdealer = async (req, res) => {
       console.log('a new dealer has been created: ',newdealeraccount);
     }else{
 
-      // const activesub=dayjs.unix(dealer.adactivation)
-      // console.log('date to ad expiry: ',activesub);
-      if(dealer.adactivation>Math.floor(Date.now()/1000))return res.send({message:`you have an active subscrition till {activesub}`})
+       const activesub=dayjs.unix(dealer.adactivation).toDate()
+       console.log('date to ad expiry: ',activesub);
+       const calenderdate= dayjs(activesub).format('DD,MMM YYYY')
+       const displaydate=calenderdate.toString()
+      if(dealer.adactivation>Math.floor(Date.now()/1000))return res.send({message:`you have an active subscrition wait till ${displaydate}`})
 
       let maxadcount=0
       if(plan==='bronze')maxadcount=8
@@ -149,7 +151,7 @@ exports.stkpushdealer = async (req, res) => {
     }
 
     
-    return res.send({message:'evrything working fine'})
+    return res.send({message:'await payment notification on your phone'})
     // console.log('account from  subscription user: ',accounttype);
 
     // res.send({
