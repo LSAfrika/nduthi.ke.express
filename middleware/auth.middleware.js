@@ -17,7 +17,7 @@ exports.authorization = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log("Auth middleware error: ", error.message);
+    console.log("Auth middleware error authorization: ", error.message);
 
     if (error.message === "jwt expired") {
       const refreshtoken = req.cookies.access;
@@ -43,29 +43,34 @@ exports.dealerpaymentauthorization = async (req, res, next) => {
   try {
     const reqtoken = req.headers.authorization;
 
-    // console.log("token received: ", reqtoken);
+    //  console.log("token received: ", reqtoken);
 
     const token = reqtoken.split(" ")[1];
-    const decodedtoken = jwt.decode(token);
-    // console.log("decoded token: \n", decodedtoken);
+     const decodedtoken = jwt.decode(token);
+     console.log("decoded token: \n", decodedtoken);
     const verified = jwt.verify(token, process.env.HASHKEY);
-    // console.log("verfied token: ", verified);
+     console.log("verfied token: ", verified);
     req.body.ownerid = verified._id;
+    req.body.accounttype=verified.account
 
     next();
   } catch (error) {
-    console.log("Auth middleware error: ", error.message);
+    console.log("Auth middleware error dealerpaymentauthorization: ", error.message);
 
     if (error.message === "jwt expired") {
       const refreshtoken = req.cookies.access;
-      const user = jwt.verify(refreshtoken, process.env.REFRESHKEY);
+      console.log('refresh token from dealerapyment jwt expiry: \n',refreshtoken);
+            const user = jwt.verify(refreshtoken, process.env.REFRESHKEY);
       console.log("user from refresh token: ", user);
 
       const authtoken = jwt.sign(user, process.env.HASHKEY);
       req.body.ownerid = user._id;
+    req.body.accounttype=user.account
+
       req.body.authtoken = authtoken;
 
       next();
+      
     }
 
     res.send({
@@ -91,9 +96,9 @@ exports.authorizationGuard = async (req, res, next) => {
 
     // next();
   } catch (error) {
-    console.log("Auth middleware error: ", error.message);
+    console.log("Auth middleware error: auth guard", error.message);
     if (error.message === "jwt expired") {
-      console.log("error area being reached in auth middleware");
+      console.log("error area being reached in auth middleware auth guard");
       try {
         const refreshtoken = req.cookies.access;
         console.log("refresh token cookie:", refreshtoken);
@@ -199,5 +204,5 @@ exports.logout = async (req, res) => {
 };
 
 function refreshtoken(user) {
-  return jwt.sign(user, process.env.REFRESHKEY, { expiresIn: "1w" });
+  return jwt.sign(user, process.env.REFRESHKEY);
 }

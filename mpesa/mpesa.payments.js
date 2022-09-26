@@ -2,6 +2,7 @@ const axios = require("axios").default;
 const mpesamodel = require("../models/mpesarefrence.model");
 const LNMORecipts = require("../models/LNMO.model");
 const admodel = require("../models/Advert.model");
+const dealeraccount = require('../models/dealerpaymentinfo.model')
 const dealerpaymentinfo = require("../models/dealerpaymentinfo.model");
 const dayjs = require("dayjs");
 const { Timestamp } = require("../utilityfunctions/time");
@@ -22,11 +23,16 @@ exports.stkpush = async (req, res) => {
   try {
     const auth = "Bearer " + req.body.access_token;
 
-    const { mpesaid, no } = req.body;
+    const { mpesaid, no,accounttype } = req.body;
     // res.send({
     //   message: `api hit \n mpesaid:${mpesaid} \n  phone no: ${no} \n token:${auth}`,
     // });
     // return;
+
+    
+    console.log('account from  individual user: ',accounttype);
+
+    if(accounttype !=='individual') return res.status(409).send({message:'has to be an individual account'})
 
     const phonenumbersave = parseInt(no);
 
@@ -98,7 +104,54 @@ exports.stkpushdealer = async (req, res) => {
   try {
     const auth = "Bearer " + req.body.access_token;
 
-    const { mpesaid, no, ownerid } = req.body;
+    const { no, ownerid ,accounttype,plan,authtoken } = req.body;
+    if(accounttype !=='dealer') return res.status(409).send({message:'has to be a dealer account'})
+
+
+    console.log('dealer account values: ',no, ownerid ,accounttype,plan,authtoken);
+
+    const dealer = await dealeraccount.findOne({dealerid:ownerid})
+
+    console.log('dealer found in dealer model: ',dealer);
+
+    if(dealer === null){
+
+     let maxadcount=0
+      if(plan==='bronze')maxadcount=8
+      if(plan==='silver')maxadcount=20
+      if(plan==='gold')maxadcount=50
+
+      const newdealeraccount= await dealeraccount.create({
+        dealerid:ownerid,
+        paymentnumber:no,
+        account:plan,
+        totalads:maxadcount
+      })
+
+      console.log('a new dealer has been created: ',newdealeraccount);
+    }else{
+
+      // const activesub=dayjs.unix(dealer.adactivation)
+      // console.log('date to ad expiry: ',activesub);
+      if(dealer.adactivation>Math.floor(Date.now()/1000))return res.send({message:`you have an active subscrition till {activesub}`})
+
+      let maxadcount=0
+      if(plan==='bronze')maxadcount=8
+      if(plan==='silver')maxadcount=20
+      if(plan==='gold')maxadcount=50
+
+      dealer.paymentnumber=no 
+      dealer.account=plan
+      dealer.totalads=maxadcount
+
+      await dealer.save()
+      console.log('dealer updated record: ',dealer);
+    }
+
+    
+    return res.send({message:'evrything working fine'})
+    // console.log('account from  subscription user: ',accounttype);
+
     // res.send({
     //   message: `api hit \n mpesaid:${mpesaid} \n  phone no: ${no} \n token:${auth}`,
     // });
@@ -162,7 +215,7 @@ exports.stkpushdealer = async (req, res) => {
 
     res.send({ message: stkresult.data });
   } catch (error) {
-    console.log("error encounterd stk push: ", error.message);
+    console.log("error encounterd stk push dealer: ", error.message);
     res.send({ message: error.message, err: error });
   }
 };

@@ -16,7 +16,7 @@ const {
 
 //* ADD  PARAMS ID TOGET SPECIFICUSER
 //* authtoken
-router.post("/stkpush", authtoken, stkpush);
+router.post("/stkpush",dealerpaymentauthorization, authtoken, stkpush);
 router.post(
   "/stkpushdealer",
   dealerpaymentauthorization,
