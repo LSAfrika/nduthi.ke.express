@@ -21,13 +21,13 @@ exports.getad = async (req, res) => {
 
 exports.getallads = async (req, res) => {
   try {
-    console.log("Cookies get al ad route: ", req.cookies);
+    // console.log("Cookies get al ad route: ", req.cookies);
     const pagesize = 5;
     let pagination = req.query.pagination;
     console.log("all query params: \n", req.query);
     // return;
     let paginationnumber = parseInt(pagination);
-    // console.log("params attained:", paginationnumber); 
+    // console.log("params attained:", paginationnumber);
     isnotaumber = isNaN(paginationnumber);
     // console.log("is not a number value: ", isnotaumber);
     if (isnotaumber === true) {

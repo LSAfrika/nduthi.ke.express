@@ -46,31 +46,36 @@ exports.dealerpaymentauthorization = async (req, res, next) => {
     //  console.log("token received: ", reqtoken);
 
     const token = reqtoken.split(" ")[1];
-     const decodedtoken = jwt.decode(token);
-     console.log("decoded token: \n", decodedtoken);
+    const decodedtoken = jwt.decode(token);
+    console.log("decoded token: \n", decodedtoken);
     const verified = jwt.verify(token, process.env.HASHKEY);
-     console.log("verfied token: ", verified);
+    console.log("verfied token: ", verified);
     req.body.ownerid = verified._id;
-    req.body.accounttype=verified.account
+    req.body.accounttype = verified.account;
 
     next();
   } catch (error) {
-    console.log("Auth middleware error dealerpaymentauthorization: ", error.message);
+    console.log(
+      "Auth middleware error dealerpaymentauthorization: ",
+      error.message
+    );
 
     if (error.message === "jwt expired") {
       const refreshtoken = req.cookies.access;
-      console.log('refresh token from dealerapyment jwt expiry: \n',refreshtoken);
-            const user = jwt.verify(refreshtoken, process.env.REFRESHKEY);
+      console.log(
+        "refresh token from dealerapyment jwt expiry: \n",
+        refreshtoken
+      );
+      const user = jwt.verify(refreshtoken, process.env.REFRESHKEY);
       console.log("user from refresh token: ", user);
 
       const authtoken = jwt.sign(user, process.env.HASHKEY);
       req.body.ownerid = user._id;
-    req.body.accounttype=user.account
+      req.body.accounttype = user.account;
 
       req.body.authtoken = authtoken;
 
       next();
-      
     }
 
     res.send({
@@ -88,26 +93,35 @@ exports.authorizationGuard = async (req, res, next) => {
     // console.log("token received: ", req.cookies);
 
     const token = reqtoken.split(" ")[1];
-    // const decodedtoken = jwt.decode(token);
-    // console.log("decoded token: \n", decodedtoken);
+    const decodedtoken = jwt.decode(token);
+    console.log("decoded token: \n", decodedtoken);
     const verified = await jwt.verify(token, process.env.HASHKEY);
-    // console.log("auth guard token verification: ", verified);
-    res.send({ auth: true });
+    console.log("auth guard token verified & not expired: ", verified);
+    return res.send({ auth: true });
 
     // next();
   } catch (error) {
     console.log("Auth middleware error: auth guard", error.message);
     if (error.message === "jwt expired") {
-      console.log("error area being reached in auth middleware auth guard");
+      console.log("token expired needs to be refreshed");
       try {
         const refreshtoken = req.cookies.access;
-        console.log("refresh token cookie:", refreshtoken);
+        // console.log("jwt expired refresh token cookie:", refreshtoken);
 
-        const refreshuser = jwt.verify(refreshtoken, process.env.REFRESHKEY);
-        console.log("user from refresh token: ", refreshuser);
+        const refresheduser = jwt.verify(refreshtoken, process.env.REFRESHKEY);
+        // console.log("user from refresh token: ", refresheduser);
 
-        const authtoken = await jwt.sign(refreshuser, process.env.HASHKEY);
-        console.log("new generated token:\n", authtoken);
+        delete refresheduser.iat;
+        // const usertokendata = Object.entries(refresheduser).filter(
+        //   ([key, value]) => key != "iat"
+        // );
+        console.log("token without iat:\n", refresheduser);
+
+        const authtoken = await jwt.sign(refresheduser, process.env.HASHKEY, {
+          expiresIn: "10m",
+        });
+        const senttoken = await jwt.decode(authtoken);
+        console.log("new generated token after token expiry:\n", senttoken);
         return res.send({ auth: true, authtoken });
       } catch (error) {
         console.log(" refresh token error message: ", error.message);
@@ -149,7 +163,7 @@ exports.firebasetokenlogin = async (req, res, next) => {
       console.log("loging in user: ", getuser);
 
       const token = await jwt.sign({ ...getuser._doc }, process.env.HASHKEY, {
-        expiresIn: "15m",
+        expiresIn: "10m",
       });
       console.log("login user stroage token:\n", token);
 
