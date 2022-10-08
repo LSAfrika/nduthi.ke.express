@@ -24,7 +24,11 @@ exports.authorization = async (req, res, next) => {
       const user = jwt.verify(refreshtoken, process.env.REFRESHKEY);
       console.log("user from refresh token: ", user);
 
-      const authtoken = jwt.sign(user, process.env.HASHKEY);
+      delete user.iat;
+
+      const authtoken = jwt.sign(user, process.env.HASHKEY, {
+        expiresIn: "10m",
+      });
       req.body.ownerid = user._id;
 
       // next()
@@ -94,14 +98,14 @@ exports.authorizationGuard = async (req, res, next) => {
 
     const token = reqtoken.split(" ")[1];
     const decodedtoken = jwt.decode(token);
-    console.log("decoded token: \n", decodedtoken);
+    // console.log("decoded token: \n", decodedtoken);
     const verified = await jwt.verify(token, process.env.HASHKEY);
-    console.log("auth guard token verified & not expired: ", verified);
+    // console.log("auth guard token verified & not expired: ", verified);
     return res.send({ auth: true });
 
     // next();
   } catch (error) {
-    console.log("Auth middleware error: auth guard", error.message);
+    // console.log("Auth middleware error: auth guard", error.message);
     if (error.message === "jwt expired") {
       console.log("token expired needs to be refreshed");
       try {

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const usersfirstad = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId },
+    user: { type: mongoose.Schema.Types.ObjectId, required: true },
   },
   { timestamps: true }
 );

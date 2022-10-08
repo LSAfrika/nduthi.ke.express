@@ -19,7 +19,7 @@ const { authorization } = require("../middleware/auth.middleware");
 const { adcheckguard } = require("../middleware/adcheck.middleware");
 //* ADD  PARAMS ID TOGET SPECIFICUSER
 
-router.post("/create", authorization, adcheckguard, dirmiddleware, createad);
+router.post("/create", adcheckguard, dirmiddleware, createad);
 
 router.get("/get/filter/", getfilteredads);
 

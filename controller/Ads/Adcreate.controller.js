@@ -2,8 +2,12 @@ const Admodel = require("../../models/Advert.model");
 const fs = require("fs");
 
 const { randomgenerator } = require("../../utilityfunctions/randomgen");
+const { json } = require("body-parser");
 exports.createad = async (req, res) => {
   try {
+    const { data, adactivation, _id } = req.body;
+    const datatocreatead = JSON.parse(data);
+
     let {
       brand,
       name,
@@ -17,11 +21,9 @@ exports.createad = async (req, res) => {
       ownerid,
       counter,
       mpesaid,
-      adactivation,
-      _id,
-    } = req.body;
+    } = datatocreatead;
 
-    // console.log("body received by  ad post request", req.body);
+    console.log("body received by  ad post request", req.body);
     // return;
     let images = [];
     mpesaid = await randomgenerator();
