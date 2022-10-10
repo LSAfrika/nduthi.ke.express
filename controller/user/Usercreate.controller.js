@@ -42,7 +42,7 @@ exports.createuser = async (req, res) => {
     );
 
     res.cookie("access", refreshtoken, {
-      expires: 604800,
+      expiresIn: 604800,
       httpOnly: true,
     });
 
@@ -62,7 +62,7 @@ exports.uploadphoto = async (req, res) => {
     const { ownerid, imgpath } = req.body;
 
     const user = await usermodel.findById(ownerid);
-    console.log("user photo route req.body: \n", ownerid, imgpath);
+    console.log("user photo route req.body: \n", ownerid,"\n", imgpath);
     if (!user)
       return res
         .status(404)
