@@ -84,8 +84,16 @@ exports.createad = async (req, res) => {
       _id,
     });
 
-    res.send({
+    if (req.body.firstad)
+      return res.send({
+        message: "ad creation route reached",
+        ad: adtocreate,
+        firstad: true,
+      });
+
+    return res.send({
       message: "ad creation route reached",
+      firstad: false,
 
       ad: adtocreate,
     });

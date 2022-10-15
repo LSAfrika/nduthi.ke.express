@@ -23,7 +23,9 @@ exports.createuser = async (req, res) => {
       email,
     });
     const createduser = await newuser.save();
-    console.log("created user: ", createduser);
+    // console.log("created user: ", createduser);
+    const sevendaysinmillseconds = 604800;
+    const expiresin = Math.floor(Date.now() / 1000) + sevendaysinmillseconds;
 
     const usertoken = await jwt.sign(
       { ...createduser._doc },
@@ -35,14 +37,12 @@ exports.createuser = async (req, res) => {
 
     const refreshtoken = await jwt.sign(
       { ...createduser._doc },
-      process.env.REFRESHKEY,
-      {
-        expiresIn: "1w",
-      }
+      process.env.REFRESHKEY
     );
 
     res.cookie("access", refreshtoken, {
-      expiresIn: 604800,
+      maxAge: expiresin,
+
       httpOnly: true,
     });
 
@@ -62,7 +62,7 @@ exports.uploadphoto = async (req, res) => {
     const { ownerid, imgpath } = req.body;
 
     const user = await usermodel.findById(ownerid);
-    console.log("user photo route req.body: \n", ownerid,"\n", imgpath);
+    console.log("user photo route req.body: \n", ownerid, "\n", imgpath);
     if (!user)
       return res
         .status(404)

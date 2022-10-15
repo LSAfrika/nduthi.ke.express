@@ -27,6 +27,9 @@ exports.adcheckguard = async (req, res, next) => {
       nextmonthstring = dayjs(nextmonth.toDate());
       const expirytimestamp = Math.round(new Date(nextmonthstring).getTime());
       req.body.adactivation = expirytimestamp;
+
+      req.body.firstad = true;
+
       // await firstadcheck.create({ user: userid });
       console.log("users first ad");
 
