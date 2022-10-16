@@ -80,7 +80,7 @@ exports.createad = async (req, res) => {
       counter,
       mpesaid,
       adactivation,
-      Images: images,
+      images,
       _id,
     });
 
