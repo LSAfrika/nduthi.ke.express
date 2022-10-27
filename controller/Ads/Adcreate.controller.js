@@ -44,7 +44,7 @@ exports.createad = async (req, res) => {
         // let imglink = filepath.split('/')[1]+"/" + imgobject[img].name;
         let imagepath = "http://localhost:5050/" + filepath;
         let imagebinary = imgobject[img].data;
-        // console.log(imgobject[img].data);
+        console.log("path for each file\n", imagepath);
 
         fs.writeFileSync(savepath, imagebinary, (err) => {
           if (err) {
@@ -60,7 +60,7 @@ exports.createad = async (req, res) => {
         start++;
       });
 
-      // console.log("images: ", images);
+      console.log("images: ", images);
 
       // console.log("files uploaded: ", start);
     }

@@ -19,7 +19,7 @@ const Adschema = new mongoose.Schema(
       required: true,
     },
     counter: { type: Number, required: true, default: 0 },
-    Images: [{ type: String }],
+    images: [{ type: String }],
     //  activated:{type:Boolean,required:true ,default:false}
   },
   { timestamps: true }
