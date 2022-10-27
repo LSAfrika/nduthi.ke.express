@@ -177,7 +177,7 @@ exports.getalluserads = async (req, res) => {
     const id = req.params.id;
     const ads = await Admodel.find({
       ownerid: id,
-      // adactivation: { $gt: Date.now() },
+      adactivation: { $gt: Date.now() },
     }).populate("ownerid", "username phone createdAt");
     //{
     //  adactivation: { $gt: Date.now() },
@@ -199,7 +199,7 @@ exports.getalluserads = async (req, res) => {
           mpesaid,
           ownerid,
           counter,
-          Images,
+          images,
           createdAt,
         } = ad;
         const resad = {
@@ -215,7 +215,7 @@ exports.getalluserads = async (req, res) => {
           mpesaid,
           ownerid,
           counter,
-          Images,
+          images,
           createdAt,
         };
 

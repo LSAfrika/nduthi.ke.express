@@ -29,7 +29,7 @@ router.get("/getuseradsdashboard/:id", getalluseradsdashboard);
 router.get("/get/", getallads);
 router.get("/similarads/", similarads);
 
-router.patch("/update/:id", authorization, updatead);
+router.patch("/update/:id", updatead);
 router.patch("/updatecounter/:id", viewcounter);
 router.delete("/delete/:id");
 
