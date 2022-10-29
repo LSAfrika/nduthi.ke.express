@@ -12,6 +12,7 @@ const {
 } = require("../controller/Ads/Adread.controller");
 const {
   updatead,
+  imagesupdate,
   viewcounter,
 } = require("../controller/Ads/Adupdate.controller");
 const { dirmiddleware } = require("../middleware/uid.middleware");
@@ -20,6 +21,7 @@ const { adcheckguard } = require("../middleware/adcheck.middleware");
 //* ADD  PARAMS ID TOGET SPECIFICUSER
 
 router.post("/create", adcheckguard, dirmiddleware, createad);
+router.post("/photoupdate/:id", imagesupdate);
 
 router.get("/get/filter/", getfilteredads);
 

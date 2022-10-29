@@ -3,7 +3,7 @@ exports.updatead = async (req, res) => {
   try {
     id = req.params.id;
     const update = req.body;
-    console.log("ad update body:\n", update);
+    // console.log("ad update body:\n", update);
     const ad = await Admodel.findById(id);
 
     if (ad) {
@@ -18,7 +18,10 @@ exports.updatead = async (req, res) => {
       ad.county = update.county;
       ad.subcounty = update.subcounty;
       ad.counter = update.counter;
-      ad.images = update.images;
+      ad.images = [];
+      console.log("images array after delete:\n", ad.images);
+      ad.images = update.images.flat();
+      console.log("images array after populating:\n", ad.images);
 
       const result = await ad.save();
       res.send({ message: "ad updated successfully", updatedad: result });
@@ -27,6 +30,22 @@ exports.updatead = async (req, res) => {
     console.log("error: ", error.message);
     // console.log("full error: ", error);
     res.send({ err: error.message });
+  }
+};
+
+exports.imagesupdate = async (req, res) => {
+  const id = req.params.id;
+
+  console.log("photos body update:\n", req.body);
+
+  if (req.files) {
+    console.log("files in body:\n", req.files);
+  }
+
+  return res.send({ message: "req.body" });
+  const updatead = Admodel.findById(id);
+  const savepath = ``;
+  if (updatead) {
   }
 };
 
