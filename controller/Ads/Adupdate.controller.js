@@ -1,4 +1,7 @@
 const Admodel = require("../../models/Advert.model");
+const fs = require("fs");
+
+
 exports.updatead = async (req, res) => {
   try {
     id = req.params.id;
@@ -19,9 +22,9 @@ exports.updatead = async (req, res) => {
       ad.subcounty = update.subcounty;
       ad.counter = update.counter;
       ad.images = [];
-      console.log("images array after delete:\n", ad.images);
+      // console.log("images array after delete:\n", ad.images);
       ad.images = update.images.flat();
-      console.log("images array after populating:\n", ad.images);
+      // console.log("images array after populating:\n", ad.images);
 
       const result = await ad.save();
       res.send({ message: "ad updated successfully", updatedad: result });
@@ -36,17 +39,127 @@ exports.updatead = async (req, res) => {
 exports.imagesupdate = async (req, res) => {
   const id = req.params.id;
 
-  console.log("photos body update:\n", req.body);
+  const ad = await Admodel.findById(id);
+  // const ad = await Admodel.findById(id).exists();
+if(ad===null) return res.status(400).send({message:'no ad found'})
+  let deletionarray=[]
+  if (Object.keys(req.body).length !== 0){
+let counter=0
+    console.log("full image path for deletion:\n", req.body.del);
+
+    if(Array.isArray(req.body.del)===true){
+ 
+    const imagespathfordeletionarray= req.body.del
+    const imagesfordeletionarraylength= req.body.del.length
+    console.log('created array for images',imagespathfordeletionarray);
+
+    imagespathfordeletionarray.forEach(path => {
+      const segmentedpath = path.split('adimages')[1]
+      const filepath='public/adimages'+segmentedpath
+      deletionarray.push(filepath)
+      counter++
+
+      if(counter>=imagesfordeletionarraylength) {
+        console.log('image path for deletion: ',deletionarray)
+
+        console.log('multiple images array before splicing: ',ad.images);
+
+        deletionarray.forEach(del=>{
+          try {
+             fs.unlinkSync(del)
+            let pathindex=  ad.images.indexOf(path)
+      ad.images.splice(pathindex,1)
+      console.log('multiple new images array after splicing: ',ad.images);
+      
+            
+          } catch (error) {
+            return res.send({message:'error while deleting images',imageerror:error.message})
+          }
+        })
+
+        
+     
+      
+      }
+    });
+    // return
+
+  }else{
+    const fullpath= req.body.del
+    const segmentedpath =fullpath.split('adimages')[1]
+    const filepath='public/adimages'+segmentedpath
+
+    try {
+       fs.unlinkSync(filepath)
+      let pathindex=  ad.images.indexOf(fullpath)
+      console.log('single image array before splicing: ',ad.images);
+      ad.images.splice(pathindex,1)
+      console.log('single new image array after splicing: ',ad.images);
+      
+    } catch (error) {
+      return res.send({message:'error while deleting images',imageerror:error.message})
+    }
+  }
+
+  await ad.save()
+
+
+}
+
+// return
+
+
+ // return res.send({message:'testing images working',array:deletionarray,deletedimages:ad})
+
+  // const ad = await Admodel.findById('62ee610e9e3146f88ac294b1');
+
+  
+  const dirpath=`adimages/${id}`
+  let imagecounter=0
 
   if (req.files) {
-    console.log("files in body:\n", req.files);
+    //  console.log("files in body:\n", req.files);
+
+     const imgobject = req.files;
+     const imgentries = Object.keys(imgobject);
+     const imageslength = imgentries.length;
+     imgentries.forEach(async (img) => {
+      let imagename = Date.now() + imgobject[img].name;
+      let filepath = dirpath + "/" + imagename;
+      let savepath = "public/" + filepath;
+      // let imglink = filepath.split('/')[1]+"/" + imgobject[img].name;
+      let imagepath = "http://localhost:5050/" + filepath;
+      let imagebinary = imgobject[img].data;
+      console.log("path for each file\n", imagepath);
+
+      fs.writeFileSync(savepath, imagebinary, (err) => {
+        if (err) {
+          console.log(
+            "error found while uploading ad photos: \n",
+            err.message,
+            err
+          );
+        }
+      });
+
+      ad.images.push(imagepath);
+      imagecounter++;
+    });
+
+    console.log("images: ", ad.images);
+
+    if(imagecounter>=imageslength) await ad.save()
+
+    return res.status(202).send({ message: "ad images updated",updatedad:ad });
   }
 
-  return res.send({ message: "req.body" });
-  const updatead = Admodel.findById(id);
-  const savepath = ``;
-  if (updatead) {
-  }
+  return res.status(202).send({ message: "ad update complete",updatedad:ad });
+
+
+  // const updatead = Admodel.findById(id);
+  // const savepath = ``;
+  // if (updatead) {
+  // }
 };
 
 exports.viewcounter = async (req, res) => {

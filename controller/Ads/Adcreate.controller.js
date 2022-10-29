@@ -31,7 +31,7 @@ exports.createad = async (req, res) => {
 
     if (req.files) {
       let dirpath = req.body.imgpath;
-      console.log("save path: \n", dirpath);
+      // console.log("save path: \n", dirpath);
       const imgobject = req.files;
       const imgentries = Object.keys(imgobject);
       const imglength = imgentries.length;
@@ -40,11 +40,14 @@ exports.createad = async (req, res) => {
       imgentries.forEach(async (img) => {
         let imagename = Date.now() + imgobject[img].name;
         let filepath = dirpath + "/" + imagename;
+        // console.log('file path save: ',filepath);
         let savepath = "public/" + filepath;
+        // console.log('save path save: ',filepath);
+
         // let imglink = filepath.split('/')[1]+"/" + imgobject[img].name;
         let imagepath = "http://localhost:5050/" + filepath;
         let imagebinary = imgobject[img].data;
-        console.log("path for each file\n", imagepath);
+        // console.log("save path for each file\n", imagepath);
 
         fs.writeFileSync(savepath, imagebinary, (err) => {
           if (err) {
