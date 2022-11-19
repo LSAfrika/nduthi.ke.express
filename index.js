@@ -48,6 +48,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/user", require("./routes/user.routes"));
+app.use("/ticket", require("./routes/tickets.routes"));
 
 app.use("/ad", require("./routes/Ads.routes"));
 app.use("/payments", require("./routes/mpesa.routes"));

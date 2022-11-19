@@ -1,4 +1,3 @@
-const { query } = require("express");
 const Admodel = require("../../models/Advert.model");
 
 exports.getad = async (req, res) => {
