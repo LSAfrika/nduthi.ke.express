@@ -30,9 +30,7 @@ exports.createuser = async (req, res) => {
     const usertoken = await jwt.sign(
       { ...createduser._doc },
       process.env.HASHKEY,
-      {
-        expiresIn: "5m",
-      }
+      { expiresIn: "5m" }
     );
 
     const refreshtoken = await jwt.sign(
@@ -96,7 +94,13 @@ exports.uploadphoto = async (req, res) => {
         user.pictureurl = imagepath;
         await user.save();
 
-        const authtoken = await jwt.sign({ ...user._doc }, process.env.HASHKEY);
+        const authtoken = await jwt.sign(
+          { ...user._doc },
+          process.env.HASHKEY,
+          {
+            expiresIn: "10m",
+          }
+        );
         return res.send({
           message: "profile photo uploaded",
           user,

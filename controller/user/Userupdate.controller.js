@@ -14,7 +14,13 @@ exports.updateuser = async (req, res) => {
       Object.assign(updateuser, updatefields);
       const result = await updateuser.save();
 
-      const authtoken = await jwt.sign({ ...result._doc }, process.env.HASHKEY);
+      const authtoken = await jwt.sign(
+        { ...result._doc },
+        process.env.HASHKEY,
+        {
+          expiresIn: "10m",
+        }
+      );
       const accesstoken = await jwt.sign(
         { ...result._doc },
         process.env.REFRESHKEY
