@@ -2,7 +2,7 @@ const axios = require("axios").default;
 const mpesamodel = require("../models/mpesarefrence.model");
 const LNMORecipts = require("../models/LNMO.model");
 const admodel = require("../models/Advert.model");
-const dealeraccount = require('../models/dealerpaymentinfo.model')
+const dealeraccount = require("../models/dealerpaymentinfo.model");
 const dealerpaymentinfo = require("../models/dealerpaymentinfo.model");
 const dayjs = require("dayjs");
 const { Timestamp } = require("../utilityfunctions/time");
@@ -23,16 +23,18 @@ exports.stkpush = async (req, res) => {
   try {
     const auth = "Bearer " + req.body.access_token;
 
-    const { mpesaid, no,accounttype } = req.body;
+    const { mpesaid, no, accounttype } = req.body;
     // res.send({
     //   message: `api hit \n mpesaid:${mpesaid} \n  phone no: ${no} \n token:${auth}`,
     // });
     // return;
 
-    
-    console.log('account from  individual user: ',accounttype);
+    console.log("account from  individual user: ", accounttype);
 
-    if(accounttype !=='individual') return res.status(409).send({message:'has to be an individual account'})
+    if (accounttype !== "individual")
+      return res
+        .status(409)
+        .send({ message: "has to be an individual account" });
 
     const phonenumbersave = parseInt(no);
 
@@ -53,6 +55,7 @@ exports.stkpush = async (req, res) => {
 
     // return;
     console.log(auth);
+    console.log("timestamp generated:\n", Timestamp());
     const timestamp = Timestamp();
 
     // *  to generate pass word we join the SHORTCODE + PASSKEY + TIMESTAMP into base 64 Buffer.from(shortcode+passkey+timestamp).toString('base64')
@@ -85,7 +88,7 @@ exports.stkpush = async (req, res) => {
         PartyB: "174379",
         PhoneNumber: `${phonenumbersave}`,
         CallBackURL:
-          "https://50c3-197-232-61-237.ap.ngrok.io/payments/stkcallback",
+          "https://f541-154-122-166-184.eu.ngrok.io/payments/stkcallback",
         AccountReference: `${mpesaid}`,
         TransactionDesc: `payment for ${mpesaid}`,
       },
@@ -95,6 +98,7 @@ exports.stkpush = async (req, res) => {
     res.send({ message: stkresult.data });
   } catch (error) {
     console.log("error encounterd stk push: ", error.message);
+    console.log("error encounterd stk push full error: ", error.message);
     res.send({ message: error.message, err: error });
   }
 };
@@ -104,54 +108,61 @@ exports.stkpushdealer = async (req, res) => {
   try {
     const auth = "Bearer " + req.body.access_token;
 
-    const { no, ownerid ,accounttype,plan,authtoken } = req.body;
-    if(accounttype !=='dealer') return res.status(409).send({message:'has to be a dealer account'})
+    const { no, ownerid, accounttype, plan, authtoken } = req.body;
+    if (accounttype !== "dealer")
+      return res.status(409).send({ message: "has to be a dealer account" });
 
+    console.log(
+      "dealer account values: ",
+      no,
+      ownerid,
+      accounttype,
+      plan,
+      authtoken
+    );
 
-    console.log('dealer account values: ',no, ownerid ,accounttype,plan,authtoken);
+    const dealer = await dealeraccount.findOne({ dealerid: ownerid });
 
-    const dealer = await dealeraccount.findOne({dealerid:ownerid})
+    console.log("dealer found in dealer model: ", dealer);
 
-    console.log('dealer found in dealer model: ',dealer);
+    if (dealer === null) {
+      let maxadcount = 0;
+      if (plan === "bronze") maxadcount = 8;
+      if (plan === "silver") maxadcount = 20;
+      if (plan === "gold") maxadcount = 50;
 
-    if(dealer === null){
+      const newdealeraccount = await dealeraccount.create({
+        dealerid: ownerid,
+        paymentnumber: no,
+        account: plan,
+        totalads: maxadcount,
+      });
 
-     let maxadcount=0
-      if(plan==='bronze')maxadcount=8
-      if(plan==='silver')maxadcount=20
-      if(plan==='gold')maxadcount=50
+      console.log("a new dealer has been created: ", newdealeraccount);
+    } else {
+      const activesub = dayjs.unix(dealer.adactivation).toDate();
+      console.log("date to ad expiry: ", activesub);
+      const calenderdate = dayjs(activesub).format("DD,MMM YYYY");
+      const displaydate = calenderdate.toString();
+      if (dealer.adactivation > Math.floor(Date.now() / 1000))
+        return res.send({
+          message: `you have an active subscrition wait till ${displaydate}`,
+        });
 
-      const newdealeraccount= await dealeraccount.create({
-        dealerid:ownerid,
-        paymentnumber:no,
-        account:plan,
-        totalads:maxadcount
-      })
+      let maxadcount = 0;
+      if (plan === "bronze") maxadcount = 8;
+      if (plan === "silver") maxadcount = 20;
+      if (plan === "gold") maxadcount = 50;
 
-      console.log('a new dealer has been created: ',newdealeraccount);
-    }else{
+      dealer.paymentnumber = no;
+      dealer.account = plan;
+      dealer.totalads = maxadcount;
 
-       const activesub=dayjs.unix(dealer.adactivation).toDate()
-       console.log('date to ad expiry: ',activesub);
-       const calenderdate= dayjs(activesub).format('DD,MMM YYYY')
-       const displaydate=calenderdate.toString()
-      if(dealer.adactivation>Math.floor(Date.now()/1000))return res.send({message:`you have an active subscrition wait till ${displaydate}`})
-
-      let maxadcount=0
-      if(plan==='bronze')maxadcount=8
-      if(plan==='silver')maxadcount=20
-      if(plan==='gold')maxadcount=50
-
-      dealer.paymentnumber=no 
-      dealer.account=plan
-      dealer.totalads=maxadcount
-
-      await dealer.save()
-      console.log('dealer updated record: ',dealer);
+      await dealer.save();
+      console.log("dealer updated record: ", dealer);
     }
 
-    
-    return res.send({message:'await payment notification on your phone'})
+    return res.send({ message: "await payment notification on your phone" });
     // console.log('account from  subscription user: ',accounttype);
 
     // res.send({
@@ -217,6 +228,7 @@ exports.stkpushdealer = async (req, res) => {
 
     res.send({ message: stkresult.data });
   } catch (error) {
+    console.log("error encounterd stk push dealer: ", error.message);
     console.log("error encounterd stk push dealer: ", error.message);
     res.send({ message: error.message, err: error });
   }
