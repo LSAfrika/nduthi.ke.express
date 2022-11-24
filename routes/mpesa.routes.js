@@ -5,13 +5,14 @@ const { authtoken } = require("../mpesa/accesstoken.generator");
 const {
   getaccesstoken,
   stkpush,
-  stkpushdealer,
   stkcallback,
   simulatepaybill,
   registerurl,
   validation,
   confirmation,
   stkcallbacksuccess,
+  Dealerstkcallback,
+  Dealerstkpush,
 } = require("../mpesa/mpesa.payments");
 
 //* ADD  PARAMS ID TOGET SPECIFICUSER
@@ -21,7 +22,7 @@ router.post(
   "/stkpushdealer",
   dealerpaymentauthorization,
   authtoken,
-  stkpushdealer
+  Dealerstkpush
 );
 
 router.get("/registerurls", authtoken, registerurl);
@@ -30,6 +31,7 @@ router.get("/simulatepaybill", authtoken, simulatepaybill);
 router.get("/success", stkcallbacksuccess);
 
 router.post("/stkcallback", stkcallback);
+router.post("/Dealerstkcallback", Dealerstkcallback);
 router.post("/validation", validation);
 router.post("/confirmation", confirmation);
 

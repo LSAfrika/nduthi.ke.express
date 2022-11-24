@@ -51,11 +51,11 @@ exports.dealerpaymentauthorization = async (req, res, next) => {
 
     const token = reqtoken.split(" ")[1];
     const decodedtoken = jwt.decode(token);
-    console.log("decoded token: \n", decodedtoken);
-    const verified = jwt.verify(token, process.env.HASHKEY);
-    console.log("verfied token: ", verified);
-    req.body.ownerid = verified._id;
-    req.body.accounttype = verified.account;
+    // console.log("decoded token: \n", decodedtoken);
+    // const verified = jwt.verify(token, process.env.HASHKEY);
+    // console.log("verfied token: ", verified);
+    req.body.ownerid = decodedtoken._id;
+    req.body.accounttype = decodedtoken.account;
 
     next();
   } catch (error) {

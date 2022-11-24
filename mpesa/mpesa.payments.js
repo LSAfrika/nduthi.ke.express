@@ -88,7 +88,7 @@ exports.stkpush = async (req, res) => {
         PartyB: "174379",
         PhoneNumber: `${phonenumbersave}`,
         CallBackURL:
-          "https://f541-154-122-166-184.eu.ngrok.io/payments/stkcallback",
+          "https://641b-154-122-196-60.eu.ngrok.io/payments/stkcallback",
         AccountReference: `${mpesaid}`,
         TransactionDesc: `payment for ${mpesaid}`,
       },
@@ -103,12 +103,16 @@ exports.stkpush = async (req, res) => {
   }
 };
 
-exports.stkpushdealer = async (req, res) => {
+exports.Dealerstkpush = async (req, res) => {
   // console.log("token received in stkpush: ", req.body.access_token);
   try {
     const auth = "Bearer " + req.body.access_token;
-
-    const { no, ownerid, accounttype, plan, authtoken } = req.body;
+    // * authtoken
+    const { no, ownerid, accounttype, plan } = req.body;
+    console.log(
+      "dealer values: \n ",
+      no + "\n" + ownerid + "\n" + accounttype + "\n" + plan + "\n"
+    );
     if (accounttype !== "dealer")
       return res.status(409).send({ message: "has to be a dealer account" });
 
@@ -117,8 +121,8 @@ exports.stkpushdealer = async (req, res) => {
       no,
       ownerid,
       accounttype,
-      plan,
-      authtoken
+      plan
+      // authtoken
     );
 
     const dealer = await dealeraccount.findOne({ dealerid: ownerid });
@@ -162,7 +166,6 @@ exports.stkpushdealer = async (req, res) => {
       console.log("dealer updated record: ", dealer);
     }
 
-    return res.send({ message: "await payment notification on your phone" });
     // console.log('account from  subscription user: ',accounttype);
 
     // res.send({
@@ -182,12 +185,22 @@ exports.stkpushdealer = async (req, res) => {
       dealerid: ownerid,
     });
 
-    if (dealerpaymentrefrence) {
-    }
+    // if (dealerpaymentrefrence) {
+    //   const dealerads = await admodel.find({ ownerid });
 
-    return;
+    //   if (dealerads) {
+    //     console.log("all dealer ads: \n", dealerads);
+    //   }
+    // }
+
+    // return res.send({ message: "await payment notification on your phone" });
+
     console.log(auth);
     const timestamp = Timestamp();
+    let subscriptionfee = 0;
+    if (plan === "bronze") subscriptionfee = 1;
+    if (plan === "silver") subscriptionfee = 2;
+    if (plan === "gold") subscriptionfee = 3;
 
     // *  to generate pass word we join the SHORTCODE + PASSKEY + TIMESTAMP into base 64 Buffer.from(shortcode+passkey+timestamp).toString('base64')
     const passwordbuffer = Buffer.from(
@@ -214,27 +227,104 @@ exports.stkpushdealer = async (req, res) => {
           "MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBjODkzMDU5YjEwZjc4ZTZiNzJhZGExZWQyYzkxOTIwMTYwMjE2MTY1NjI3",
         Timestamp: "20160216165627",
         TransactionType: "CustomerPayBillOnline",
-        Amount: "1",
+        Amount: `${subscriptionfee}`,
         PartyA: `${phonenumbersave}`,
         PartyB: "174379",
         PhoneNumber: `${phonenumbersave}`,
         CallBackURL:
-          "https://50c3-197-232-61-237.ap.ngrok.io/payments/stkcallback",
-        AccountReference: `${mpesaid}`,
-        TransactionDesc: `payment for ${mpesaid}`,
+          "https://641b-154-122-196-60.eu.ngrok.io/payments/Dealerstkcallback",
+        AccountReference: `${plan} Account plan`,
+        TransactionDesc: `payment for ${plan} Dealer Account`,
       },
       { headers: { Authorization: auth } }
     );
 
-    res.send({ message: stkresult.data });
+    res.send({
+      message: "await notification on your phone",
+      data: stkresult.data,
+    });
   } catch (error) {
     console.log("error encounterd stk push dealer: ", error.message);
-    console.log("error encounterd stk push dealer: ", error.message);
+    console.log("error encounterd stk push dealer full: ", error);
     res.send({ message: error.message, err: error });
   }
 };
 
 exports.stkcallback = async (req, res) => {
+  try {
+    // console.log("callbackdata:\n", req);
+
+    console.log("callbackdata:\n", req.body.Body.stkCallback);
+    // return;
+    const stkbody = req.body.Body.stkCallback;
+    console.log("stkbody:\n", stkbody);
+    // console.log(req.body.Body.stkCallback);
+    // const stkbody = req.body.Body.stkCallback;
+    //console.log("stk body const:\n ", stkbody);
+    if (stkbody.ResultCode === 0) {
+      // //* get metadata from call back
+      const responsearray = stkbody.CallbackMetadata.Item;
+
+      const cellnumber = responsearray[responsearray.length - 1].Value;
+      // console.log("payment number: ", cellnumber);
+
+      const mpesapaymentdoc = await mpesamodel.findOne({
+        phonenumber: cellnumber,
+      });
+
+      // console.log(("mpesa accnt doc: ", mpesapaymentdoc));
+      if (mpesapaymentdoc) {
+        // // console.log("mpesa doc: ", mpesapaymentdoc);
+        mpesapaymentdoc.phonenumber = 0;
+        await mpesapaymentdoc.save();
+
+        console.log("mpesa doc after removing phone number: ", mpesapaymentdoc);
+
+        const retrivead = await admodel.findOne({
+          mpesaid: mpesapaymentdoc.accountref,
+        });
+
+        if (retrivead) {
+          console.log("ad to update: \n", retrivead);
+
+          const nextmonth = dayjs().add(1, "month");
+
+          console.log("next month: ", nextmonth.toDate());
+
+          nextmonthstring = dayjs(nextmonth.toDate());
+          const updatetimestamp = Math.round(
+            new Date(nextmonthstring).getTime()
+          );
+
+          retrivead.adactivation = updatetimestamp;
+          await retrivead.save();
+
+          console.log("updated ad: ", retrivead);
+          console.log("nm: ", updatetimestamp);
+          console.log("tm: ", Date.now());
+          console.log("redirect to success ");
+
+          res.redirect("/payments/success");
+        }
+      }
+      // console.log("ad to update: \n", retrivead);
+    } else if (
+      req.body.Body.stkCallback.ResultCode === 1032 ||
+      req.body.Body.stkCallback.ResultDesc === "Request cancelled by user"
+    ) {
+      console.log("....................error....................");
+
+      console.log(req.body.Body.stkCallback.ResultDesc);
+    } else {
+      console.log("error encountered: \n", stkbody);
+      console.log();
+    }
+  } catch (error) {
+    console.log("stk callback error message: ", error.message);
+    console.log("stk callback full error : ", error);
+  }
+};
+exports.Dealerstkcallback = async (req, res) => {
   try {
     // console.log("callbackdata:\n", req);
 
